@@ -5,7 +5,7 @@ return {
   website     = "https://www.ericmauser.de",
 
   -- add "index.html" to the end of each link
-  pagesuffix  = true,
+  pagesuffix  = nil,
 
   -- folder that shall be scanned for content
   scanpath    = "content",
@@ -18,13 +18,13 @@ return {
 
   -- define default colors
   colors      = {
-    ["accent"]      = "#3a5",
-    ["border"]      = "#eee",
-    ["bg-page"]     = "#fafafa",
+    ["accent"]      = "#d92",
+    ["border"]      = "#ccc",
+    ["bg-page"]     = "#eee",
     ["bg-content"]  = "#fff",
-    ["bg-sidebar"]  = "#fff",
+    ["bg-sidebar"]  = "#222",
     ["fg-page"]     = "#000",
-    ["fg-sidebar"]  = "#222",
+    ["fg-sidebar"]  = "#eee",
   },
 }
 
