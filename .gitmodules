@@ -88,3 +88,18 @@
 [submodule "content/Projects/wow-addons/pfUI-darkmod"]
 	path = content/Projects/wow-addons/pfUI-darkmod
 	url = https://github.com/shagu/pfUI-darkmod.git/
+[submodule "content/Projects/arch-install"]
+	path = content/Projects/arch-install
+	url = https://github.com/shagu/arch-install
+[submodule "content/Projects/webls"]
+	path = content/Projects/webls
+	url = https://github.com/shagu/webls
+[submodule "content/Projects/makeroot"]
+	path = content/Projects/makeroot
+	url = https://github.com/shagu/makeroot
+[submodule "content/Projects/meta-teapot"]
+	path = content/Projects/meta-teapot
+	url = https://github.com/shagu/meta-teapot
+[submodule "content/Projects/arkham-gtk-theme"]
+	path = content/Projects/arkham-gtk-theme
+	url = https://github.com/shagu/arkham-gtk-theme
