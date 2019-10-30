@@ -1,0 +1,90 @@
+[submodule "content/Projects/wow-addons/pfQuest"]
+	path = content/Projects/wow-addons/pfQuest
+	url = https://github.com/shagu/pfQuest
+[submodule "content/Projects/wow-addons/pfSimpleDamage"]
+	path = content/Projects/wow-addons/pfSimpleDamage
+	url = https://github.com/shagu/pfSimpleDamage
+[submodule "content/Projects/wow-addons/pfStudio"]
+	path = content/Projects/wow-addons/pfStudio
+	url = https://github.com/shagu/pfStudio
+[submodule "content/Projects/wow-addons/pfUI"]
+	path = content/Projects/wow-addons/pfUI
+	url = https://github.com/shagu/pfUI
+[submodule "content/Projects/wow-addons/pfUI-eliteoverlay"]
+	path = content/Projects/wow-addons/pfUI-eliteoverlay
+	url = https://github.com/shagu/pfUI-eliteoverlay
+[submodule "content/Projects/wow-addons/pfUI-fonts"]
+	path = content/Projects/wow-addons/pfUI-fonts
+	url = https://github.com/shagu/pfUI-fonts
+[submodule "content/Projects/wow-addons/ShaguBam"]
+	path = content/Projects/wow-addons/ShaguBam
+	url = https://github.com/shagu/ShaguBam
+[submodule "content/Projects/wow-addons/ShaguBoP"]
+	path = content/Projects/wow-addons/ShaguBoP
+	url = https://github.com/shagu/ShaguBoP
+[submodule "content/Projects/wow-addons/ShaguChat"]
+	path = content/Projects/wow-addons/ShaguChat
+	url = https://github.com/shagu/ShaguChat
+[submodule "content/Projects/wow-addons/ShaguClock"]
+	path = content/Projects/wow-addons/ShaguClock
+	url = https://github.com/shagu/ShaguClock
+[submodule "content/Projects/wow-addons/ShaguColor"]
+	path = content/Projects/wow-addons/ShaguColor
+	url = https://github.com/shagu/ShaguColor
+[submodule "content/Projects/wow-addons/ShaguCombat"]
+	path = content/Projects/wow-addons/ShaguCombat
+	url = https://github.com/shagu/ShaguCombat
+[submodule "content/Projects/wow-addons/ShaguCopy"]
+	path = content/Projects/wow-addons/ShaguCopy
+	url = https://github.com/shagu/ShaguCopy
+[submodule "content/Projects/wow-addons/ShaguDelgado"]
+	path = content/Projects/wow-addons/ShaguDelgado
+	url = https://github.com/shagu/ShaguDelgado
+[submodule "content/Projects/wow-addons/ShaguError"]
+	path = content/Projects/wow-addons/ShaguError
+	url = https://github.com/shagu/ShaguError
+[submodule "content/Projects/wow-addons/ShaguInventory"]
+	path = content/Projects/wow-addons/ShaguInventory
+	url = https://github.com/shagu/ShaguInventory
+[submodule "content/Projects/wow-addons/ShaguKill"]
+	path = content/Projects/wow-addons/ShaguKill
+	url = https://github.com/shagu/ShaguKill
+[submodule "content/Projects/wow-addons/ShaguMount"]
+	path = content/Projects/wow-addons/ShaguMount
+	url = https://github.com/shagu/ShaguMount
+[submodule "content/Projects/wow-addons/ShaguNotify"]
+	path = content/Projects/wow-addons/ShaguNotify
+	url = https://github.com/shagu/ShaguNotify
+[submodule "content/Projects/wow-addons/ShaguPlates"]
+	path = content/Projects/wow-addons/ShaguPlates
+	url = https://github.com/shagu/ShaguPlates
+[submodule "content/Projects/wow-addons/ShaguPremium"]
+	path = content/Projects/wow-addons/ShaguPremium
+	url = https://github.com/shagu/ShaguPremium
+[submodule "content/Projects/wow-addons/ShaguQuest"]
+	path = content/Projects/wow-addons/ShaguQuest
+	url = https://github.com/shagu/ShaguQuest
+[submodule "content/Projects/wow-addons/ShaguScore"]
+	path = content/Projects/wow-addons/ShaguScore
+	url = https://github.com/shagu/ShaguScore
+[submodule "content/Projects/wow-addons/ShaguStance"]
+	path = content/Projects/wow-addons/ShaguStance
+	url = https://github.com/shagu/ShaguStance
+[submodule "content/Projects/wow-addons/ShaguTooltips"]
+	path = content/Projects/wow-addons/ShaguTooltips
+	url = https://github.com/shagu/ShaguTooltips
+[submodule "content/Projects/wow-addons/ShaguUI"]
+	path = content/Projects/wow-addons/ShaguUI
+	url = https://github.com/shagu/ShaguUI
+[submodule "content/Projects/wow-addons/ShaguValue"]
+	path = content/Projects/wow-addons/ShaguValue
+	url = https://github.com/shagu/ShaguValue
+[submodule "content/Projects/wow-addons/pfDebug"]
+	path = content/Projects/wow-addons/pfDebug
+	url = https://github.com/shagu/pfDebug
+[submodule "content/Projects/wow-addons/GMBlacklist"]
+	path = content/Projects/wow-addons/GMBlacklist
+	url = https://github.com/shagu/GMBlacklist
+[submodule "content/Projects/wow-addons/pfUI-darkmod"]
+	path = content/Projects/wow-addons/pfUI-darkmod
+	url = https://github.com/shagu/pfUI-darkmod.git/
