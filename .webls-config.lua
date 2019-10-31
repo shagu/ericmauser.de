@@ -3,6 +3,7 @@ return {
   title       = "ericmauser",
   description = "just some random notes",
   website     = "https://www.ericmauser.de",
+  cname       = "ericmauser.de",
 
   -- add "index.html" to the end of each link
   pagesuffix  = nil,
