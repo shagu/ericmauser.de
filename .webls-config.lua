@@ -19,13 +19,13 @@ return {
 
   -- define default colors
   colors      = {
-    ["accent"]      = "#3fc",
-    ["border"]      = "#222",
-    ["bg-page"]     = "#000",
-    ["bg-content"]  = "#111",
-    ["bg-sidebar"]  = "#000",
-    ["fg-page"]     = "#ccc",
-    ["fg-sidebar"]  = "#fff",
+    ["accent"]      = "#198944",
+    ["border"]      = "#eee",
+    ["bg-page"]     = "#fff",
+    ["bg-content"]  = "#fff",
+    ["bg-sidebar"]  = "#fff",
+    ["fg-page"]     = "#222",
+    ["fg-sidebar"]  = "#000",
   },
 }
 
