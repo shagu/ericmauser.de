@@ -1,5 +1,5 @@
 # Projects
-Here's a list of some of my personal software projects. Some of them are no longer under active development, but will still receive bug fixes when any are found.
+Here's a list of some of my personal software projects. Some of them are no longer under active development, but still receive bug fixes when any are found.
 To get an overview of all public projects, please visit my [GitHub Profile](https://github.com/shagu).
 
 - **[wow-addons](./wow-addons)** - Addons for World of Warcraft
