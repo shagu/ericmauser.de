@@ -1,5 +1,14 @@
 # OpenWRT on Netgear Nighthawk R7800
 
+## About
+
+    Processor: Dual Core ARMv7 Processor
+    Layout: Qualcomm Atheros IPQ8065 SoC
+    WiFi: Qualcomm Atheros QCA9984, 2.4GHz 802.11bgn, 5GHz a/n/ac
+    RAM: 512 MB
+    Flash: 128 MB
+    Ports: 2x USB 3.0, 1x eSATA
+
 ## Compile
 
     git clone https://www.github.com/openwrt/openwrt
