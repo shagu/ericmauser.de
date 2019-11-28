@@ -13,8 +13,8 @@ script:
   - rm -r .webls/content
   - cp -r content .webls/content
   - ( cd .webls && ./webls.lua )
-  - cp -f static/* www
   - mv .webls/www public
+  - cp -f static/* public
 
 deploy:
   provider: pages
