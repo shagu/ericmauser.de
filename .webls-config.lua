@@ -19,13 +19,14 @@ return {
 
   -- define default colors
   colors      = {
-    ["accent"]      = "#198944",
-    ["border"]      = "#eee",
+    ["accent"]      = "#5a5",
+    ["border"]      = "#eaeaea",
     ["bg-page"]     = "#fff",
-    ["bg-content"]  = "#fff",
-    ["bg-sidebar"]  = "#fff",
+    ["bg-content"]  = "#fafafa",
+    ["bg-sidebar"]  = "#222",
     ["fg-page"]     = "#222",
-    ["fg-sidebar"]  = "#000",
+    ["fg-sidebar"]  = "#ccc",
+    ["customcss"]   = "div.topbar { background-image: url('./bg.png'); } div.navigation { background: #fafafa; }",
   },
 }
 
