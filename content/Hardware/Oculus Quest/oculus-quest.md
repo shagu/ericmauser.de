@@ -33,6 +33,10 @@ Plug in the Oculus Device into the PC and launch "adb shell". Within the headset
 Voila, your headset is paired and you can use `adb shell` to browse the device or `adb install` to install any app you like.
 
 Most non-VR-ready apps won't show up in the regular place, you will either need to get a special launcher or launch them via the "Oculus TV" app.
+The tool "SideQuest" provides an own launcher that can be found in the "Apps" section, simply called: "SideQuest Launcher".
+
+As an alternative, you can check out the unity based launcher named [QuestAppLauncher](https://github.com/tverona1/QuestAppLauncher).
+The release page provides APKs, that can be simply installed via ADB, without the need of SideQuest or any other tools.
 
 ## Termux
 To install and use termux, you will need to fetch the APK from any mirror site like [Apkpure](https://apkpure.com/termux/com.termux), [APKMirror](https://www.apkmirror.com/apk/fredrik-fornwall/termux/) or directly from [F-Droid](https://f-droid.org/en/packages/com.termux/). Install the APK onto the device by typing: `adb install com.termux_84.apk`. Since the app was not specifically made for the oculus, it won't show up in the app-menu. But, the oculus has an "Oculus TV" app for those apps, that aren't VR-Ready, go there, select "Channels" and open the Termux app.
