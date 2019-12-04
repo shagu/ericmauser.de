@@ -8,6 +8,7 @@ Here's a list of some of the hardware i got and played around with. Including in
 - **[GGMM E2 Speaker](./GGMM E2 Speaker)** - An AirPlay compatible and Linux based WiFi-Speaker
 - **[Netgear R7800](./Netgear R7800)** - A nice Router that is fully supported by OpenWRT
 - **[Nokia N900](./Nokia N900)** - The best Linux Phone every made
+- **[Oculus Quest](./Oculus Quest)** - An android based VR headset
 - **[Odroid X](./Odroid X)** - An Exynos based ARM development Board
 - **[Pandaboard](./Pandaboard)** - An OMAP4 based ARM Develoment Board
 - **[Raspberry Pi](./Raspberry Pi)** - First Revision of the Raspberry Pi
