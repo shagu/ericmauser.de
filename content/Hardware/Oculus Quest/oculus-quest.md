@@ -58,3 +58,10 @@ Android allows us to remotly debug the device over the wireless network. First y
 
     adb disconnect
 
+## Stream to Desktop
+It is possible to stream the raw display of the oculus quest to your PC, by using builtin android tools and `ffmpeg` on your Desktop. Android has an executable called `screenrecord`, which is capable of recording the entire screen to the stdout. This allows us to pipe it through `adb` to our PC, where ffmpeg receives the stream and displays it. This even works on the restricted content like TV and 2D apps.
+
+    adb exec-out "while true; do screenrecord --bit-rate=4m --size 1280x720 --time-limit=60 --output-format=h264 -; done" | ffplay -framerate 300 -probesize 32 -sync video -
+
+In the command above, I set the framerate incredible high on purpose. This is to make sure that none of the buffers on the `ffplay`-side will fill up and start causing a lag, that is getting worse and worse. Having such a high framerate combined with the low probe size and the sync option, will cause ffplay to instantly play every received frame and ignoring everyhting else it didn't get.
+Here's alot more room for improvements, but for now, this one gave me the best results.
