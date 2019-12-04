@@ -43,3 +43,18 @@ To install and use termux, you will need to fetch the APK from any mirror site l
 
 ## Stream to Display
 Streaming can only be achieved via an official chromecast device, the Nvidia SHIELD or the official Oculus mobile app.
+
+## Wireless ADB
+Android allows us to remotly debug the device over the wireless network. First you will need to plug in the cable and start a regular shell session, in order to obtain the IP Address and to enable the tcpip debugging of adb.
+
+    adb shell ip route
+    10.23.0.0/24 dev wlan0  proto kernel  scope link  src 10.23.0.247
+                                                            ^- device IP
+
+    adb tcpip 5555
+    adb connect 10.23.0.247:5555
+
+ You're now connected to the remote device via network and send any adb commands you like. To stop the session, type:
+
+    adb disconnect
+
