@@ -38,6 +38,16 @@ The tool "SideQuest" provides an own launcher that can be found in the "Apps" se
 As an alternative, you can check out the unity based launcher named [QuestAppLauncher](https://github.com/tverona1/QuestAppLauncher).
 The release page provides APKs, that can be simply installed via ADB, without the need of SideQuest or any other tools.
 
+## Custom Beatsaber Songs
+In order to make use of user made songs, you will need to install [BMPF](https://github.com/kihecido/BMBF) which basically uninstalls Beatsaber, extracts the APK, patches it and bundles it up again.
+
+Visit their [GitHub Release Page](https://github.com/kihecido/BMBF/releases/tag/v1.4.5) and grab the latest APKs. I downloaded both and installed them via ADB:
+
+    adb install BMBF_TVWrapper.1.apk
+    adb install com.weloveoculus.BMBF.apk
+
+Once both are installed, launch the BMPF App. This will guide you through the installation process and at the end, do not launch Beat Saber directly. Instead click on the 3 dots (...) on the BeatSaber App in the library, and enable the storage permissions. You can now run Beatsaber as usual, or if you want to add new tacks, just launch the BMPF. This will allow you transfer songs to the device via an open port. The IP address and the port of it, can be found in the "Tools" tab of BMPF. Open it in your browser and drag the songs you like into it. A good source for user made custom songs is: [Beast Saber](https://bsaber.com/).
+
 ## Termux
 To install and use termux, you will need to fetch the APK from any mirror site like [Apkpure](https://apkpure.com/termux/com.termux), [APKMirror](https://www.apkmirror.com/apk/fredrik-fornwall/termux/) or directly from [F-Droid](https://f-droid.org/en/packages/com.termux/). Install the APK onto the device by typing: `adb install com.termux_84.apk`. Since the app was not specifically made for the oculus, it won't show up in the app-menu. But, the oculus has an "Oculus TV" app for those apps, that aren't VR-Ready, go there, select "Channels" and open the Termux app.
 
