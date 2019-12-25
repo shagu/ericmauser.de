@@ -62,11 +62,11 @@
   - On the first, replace `option mode 'ap'` by `option mode 'sta'`
   - On the second, remove `option wds '1'`
 
-- Open `/etc/config/dhcp` and setup DHCP forwarding:
-  - Add `list server '10.4.4.1'` to the `config dnsmasq` section *(Router IP)*
-
 - Make sure the devices are enabled
   - Remove `option disabled '1'` from `config wifi-device` section
+
+- Open `/etc/config/dhcp` and setup DHCP forwarding:
+  - Add `list server '10.4.4.1'` to the `config dnsmasq` section *(Router IP)*
 
 ## LAN-Only WiFi
 
