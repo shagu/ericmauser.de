@@ -103,3 +103,6 @@
 [submodule "content/Projects/arkham-gtk-theme"]
 	path = content/Projects/arkham-gtk-theme
 	url = https://github.com/shagu/arkham-gtk-theme
+[submodule "content/Projects/wow-addons/ShaguMail"]
+	path = content/Projects/wow-addons/ShaguMail
+	url = https://github.com/shagu/ShaguMail
