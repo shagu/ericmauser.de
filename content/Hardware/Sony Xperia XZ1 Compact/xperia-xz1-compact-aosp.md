@@ -39,9 +39,6 @@
     repo sync
     ./repo_update.sh
 
-## Rebuild Kernel (optional)
-    rm -r device/sony/common-kernel
-
 ## Build
     source build/envsetup.sh && lunch
     make -j&(nproc)
@@ -50,8 +47,6 @@
     fastboot flash oem SW_binaries_for_Xperia_Android_10*.img
 
     fastboot flash boot boot.img
-    fastboot flash vbmeta vbmeta.img
-    fastboot flash dtbo dtbo.img
     fastboot flash recovery recovery.img
     fastboot flash system system.img
     fastboot flash vendor vendor.img
