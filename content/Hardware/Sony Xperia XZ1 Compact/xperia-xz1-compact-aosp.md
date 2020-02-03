@@ -40,11 +40,15 @@
     ./repo_update.sh
 
 ## Rebuild Kernel (optional)
+Currently required, due to [[Yoshino][Lilac] Kernel 4.14 bootloops.](https://github.com/sonyxperiadev/bug_tracker/issues/530):
     rm -rf kernel/sony/msm-4.14/common-kernel/
+    cd kernel/sony/msm-4.14/kernel/
+    git checkout b5b8742^
+    cd -
 
 ## Build
     source build/envsetup.sh && lunch
-    make -j&(nproc)
+    make -j$(nproc)
 
 ## Flash
     fastboot flash oem SW_binaries_for_Xperia_Android_10*.img
