@@ -39,6 +39,9 @@
     repo sync
     ./repo_update.sh
 
+## Rebuild Kernel (optional)
+    rm -rf kernel/sony/msm-4.14/common-kernel/
+
 ## Build
     source build/envsetup.sh && lunch
     make -j&(nproc)
