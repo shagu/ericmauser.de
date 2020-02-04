@@ -41,7 +41,6 @@
 
 ## Rebuild Kernel (optional)
 Currently required, due to [[Yoshino][Lilac] Kernel 4.14 bootloops.](https://github.com/sonyxperiadev/bug_tracker/issues/530):
-    rm -rf kernel/sony/msm-4.14/common-kernel/
     cd kernel/sony/msm-4.14/kernel/
     git checkout b5b8742^
     cd -
