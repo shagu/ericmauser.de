@@ -1,35 +1,35 @@
 # A Journey into Realmzones on Vanilla World of Warcraft
 
-A world of warcraft gameclient that connects to a valid realmserver, receives a list of all available realms, aswell as a realmzone field, containing information about the language/region of each realm. In Burning Crusade and later, this list was unified across all gameclients and became simply a numbered list of countries and languages that a realm can refer to. This list is was is documented on mangos docs, wowdev and several other sources. Also the source code of several implementations of `realmd`, which serves as an opensource implementation of a realmserver, does also always refer to the new enumerations.
+A world of warcraft gameclient that connects to a valid realmserver, receives a list of all available realms, aswell as a realmzone field, containing information about the language/region of each realm. In Burning Crusade and later, this list was unified across all gameclients and became simply a numbered list of countries and languages that a realm can refer to. This list is was is documented on mangos docs, wowdev and several other sources. In addition, the source code of several implementations of `realmd`, which serves as an opensource implementation of a realmserver, does also always refer to the new enumeration.
 
-But different to what is mentioned there, the vanilla 1.12.1 handles the values a quite different. First of all, there is no unified list, that describes the languages. Instead, there are 7 different client builds existing. Those are: 1-US, 2-Korea, 3-Europe, 4-Taiwan, 5-China, 99-Test and 101-QA. Each of these clients handles the value that are set as realmzone differently. The clients only know a certain amount of realmzones and every zone that is unknown, will not be displayed in the client at all.
+But different to what is mentioned there, the vanilla 1.12.1 handles the values quite a bit different. First of all, there is no unified list, that describes the languages. But Instead, there are 7 different client builds existing. Those are: 1-US, 2-Korea, 3-Europe, 4-Taiwan, 5-China, 99-Test and 101-QA. Each of these clients handles the value that are set as realmzone differently. The clients only know a certain amount of realmzones and every zone that is unknown, will not be displayed in the client at all.
 
 ## 1. US Builds (enUS)
 * `1`: `United States`
 * `5`: `Oceanic`
 
-## 2. Korea Builds (koKR)
+## 2. Korean Builds (koKR)
 * `1`: `Korea`
 
-## 3. Europe Builds (enGB, deDE, frFR, esES)
+## 3. European Builds (enGB, deDE, frFR, esES)
 * `1`: `English`
 * `2`: `German`
 * `3`: `French`
 * `5`: `Spanish`
 
-## 4. Taiwan Realmzones (zhTW)
+## 4. Taiwan Builds (zhTW)
 * `1`: `Taiwan`
 
-## 5. China Realmzones (zhCN)
+## 5. Chinese Builds (zhCN)
 * `1`: `China`
 * `2`: `CN3` (?)
 * `3`: `CN7` (?)
 
-## 99. Test Realmzones (??)
+## 99. Test Builds (??)
 * `1`: `Test Server`
 * `5`: `Oceanic`
 
-## 101. QA Realmzones (??)
+## 101. QA Builds (??)
 * `1`: `QA Server`
 
 So if using a realmzone `3` will result in having the realm only visible in european- and chinese builds of the client. The european versions will display `French` where the chinese builds will display `CN7`. Using `5` the european builds will display `Spanish` and the US- and test builds will display `Oceanic` in the client realm info.
@@ -58,4 +58,4 @@ long,long,str,None,None,None,None,None,None,None,flags,
 3,5,"CN7",,,,,,,,0x3F007E,
 ```
 
-A side note, the ruRU is a custom client, that didn't exist back then, but however is quite popular. This client is a modification of the enUS client, and by that falls into the category of the US-builds (so it only accepts `1` and `5`).
+As a side note, the ruRU is a custom client, that didn't exist back then, but however is quite popular. This client is a modification of the enUS client, and by that falls into the category of the US-builds (so it only accepts `1` and `5`).
