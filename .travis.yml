@@ -14,7 +14,6 @@ script:
   - cp -r content .webls/content
   - ( cd .webls && ./webls.lua )
   - mv .webls/www public
-  - cp -f static/* public
 
 deploy:
   provider: pages
