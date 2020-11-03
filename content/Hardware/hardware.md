@@ -7,6 +7,7 @@ Here's a list of some of the hardware i got and played around with. Including in
 - **[eCafé](./eCafe)** - A small ARM based Netbook
 - **[GGMM E2 Speaker](./GGMM E2 Speaker)** - An AirPlay compatible and Linux based WiFi-Speaker
 - **[GL-MT300N](./GL-MT300N)** - A small OpenWRT mainline WiFi Router with two ethernet ports
+- **[Google Pixel 5](./Google Pixel 5)** - A Google Pixel Smartphone codenamed "Redfin"
 - **[Netgear R7800](./Netgear R7800)** - A nice Router that is fully supported by OpenWRT
 - **[Nokia N900](./Nokia N900)** - The best Linux Phone every made
 - **[Oculus Quest](./Oculus Quest)** - An android based VR headset
