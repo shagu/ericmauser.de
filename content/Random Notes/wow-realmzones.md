@@ -64,3 +64,34 @@ The file is called `Cfg_Categories.dbc` and can be found inside the `interface.m
     3,5,"CN7",,,,,,,,0x3F007E,
 
 As a side note, the ruRU is a custom client, that didn't exist back then, but however is quite popular. This client is a modification of the enUS client, and by that falls into the category of the US-builds (so it only accepts `1` and `5`).
+
+Here's a quick overview of what the realmzone values will display on each client:
+
+    value: 1
+      * deDE: Englisch
+      * enUS: United States
+      * esES: Inglés
+      * frFR: English
+      * koKR: 대한민국
+      * ruRU: Русский
+      * zhCN: 中国
+      * zhTW: 台灣
+
+    value: 2
+      * deDE: Deutsch
+      * esES: Alemán
+      * frFR: Deutsch
+      * zhCN: 三区
+
+    value: 3
+      * deDE: Französisch
+      * esES: Francés
+      * frFR: Français
+      * zhCN: 七区
+
+    value: 5
+      * deDE: Spanisch
+      * enUS: Oceanic
+      * esES: Español
+      * frFR: Español
+      * ruRU: Океания
