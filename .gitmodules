@@ -106,3 +106,6 @@
 [submodule "content/Projects/wow-addons/ShaguMail"]
 	path = content/Projects/wow-addons/ShaguMail
 	url = https://github.com/shagu/ShaguMail
+[submodule "content/Projects/yada-gtk-theme"]
+	path = content/Projects/yada-gtk-theme
+	url = https://github.com/shagu/yada-gtk-theme
