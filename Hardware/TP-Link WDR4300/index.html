@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../">welcome!</a> » <a href="../">Hardware</a> » <span>TP-Link WDR4300</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="tplink-wdr4300.md" class="text">
+<h1>TP-Link WDR4300</h1>
+
+<h1>OpenWRT</h1>
+<pre><code>git clone https://www.github.com/openwrt/openwrt
+cd openwrt
+./scripts/feeds update packages luci
+./scripts/feeds install -a -p luci
+make menuconfig
+</code></pre>
+
+<h2>Configure</h2>
+
+<ul>
+    <li>Target System: <code>Atheros AR7xxx/AR9xxx</code></li>
+    <li>Subtarget: <code>Generic</code></li>
+    <li>Target Profile: <code>TP-LINK TL-WDR4300 v1</code></li>
+    <li>Luci -> 1. Collections -> <code>luci</code> and <code>luci-ssl</code></li>
+</ul>
+
+<h2>Build</h2>
+
+<pre><code>make
+ls bin/targets/ar71xx/generic/openwrt-ar71xx-generic-tl-wdr4300-v1-squashfs-*
+</code></pre>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

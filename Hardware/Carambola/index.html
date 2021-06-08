@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../">welcome!</a> » <a href="../">Hardware</a> » <span>Carambola</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="carambola.md" class="text">
+<h1>Carambola</h1>
+
+<h2>Toolchain (vendor)</h2>
+
+<pre><code>git clone https://github.com/8devices/carambola carambola
+./scripts/feeds update -a
+./scripts/feeds install -a
+
+make kernel_menuconfig
+make menuconfig
+make
+</code></pre>
+
+<h3>Patching Kernel's VLAN Settings</h3>
+
+<p><a href="http://8devices.com/community/viewtopic.php?f=6&amp;t=42">http://8devices.com/community/viewtopic.php?f=6&amp;t=42</a></p>
+
+<p>in <strong>/build<em>dir/linux-ramips</em>rt305x/linux-2.6.39.4/arch/mips/ralink/rt305x/mach-carambola.c</strong>:</p>
+
+<p>replace:</p>
+
+<pre><code>rt305x_esw_data.vlan_config = RT305X_ESW_VLAN_CONFIG_LLLLW;
+</code></pre>
+
+<p>with:</p>
+
+<pre><code>rt305x_esw_data.vlan_config = RT305X_ESW_VLAN_CONFIG_WLLLL;
+</code></pre>
+
+<p>result:</p>
+
+<pre><code>=&gt; eth0: WAN Port
+=&gt; eth1: LAN Port
+</code></pre>
+
+<h2>Toolchain (mainline)</h2>
+
+<pre><code>git clone https://www.github.com/openwrt/openwrt
+cd openwrt
+./scripts/feeds update -a
+./scripts/feeds install -a
+make menuconfig
+
+# Target System -&gt; MediaTek Ralink MIPS
+# Subtarget -&gt; RT3x5x/RT5350 based boards
+# Target profile -&gt; 8devices Carambola
+# LuCI -&gt; Collections -&gt; luci-ssl (*)
+
+make -j8
+</code></pre>
+
+<h2>flashing</h2>
+<p>install <code>atftp</code></p>
+
+<pre><code>TFTPD_ROOT="/home/eric/share"
+TFTPD_OPTS="--daemon --user nobody --group nobody"
+</code></pre>
+
+<p>Connect serial cable to carambola. When this message appears, press "2":</p>
+
+<pre><code>Please choose the operation:
+  1: Load system code to SDRAM via TFTP.
+  2: Load system code then write to Flash via TFTP.
+  3: Boot system code via Flash (default).
+  4: Entr boot command line interface.
+  9: Load Boot Loader code then write to Flash via TFTP.
+</code></pre>
+
+</div><div class="gallery"><a href="20090115_005.jpg"><img src="20090115_005.jpg"/><span>20090115_005</span></a><a href="20090115_007.jpg"><img src="20090115_007.jpg"/><span>20090115_007</span></a></div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

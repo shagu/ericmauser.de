@@ -1,0 +1,115 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../">welcome!</a> » <a href="../">Hardware</a> » <span>GGMM E2 Speaker</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="ggmm-e2-speaker.md" class="text">
+<h1>GGMM E2-100 Speaker</h1>
+
+<h2>About</h2>
+<p>A cheap AirPlay compatible WiFi speaker. The device is running a kernel in version 2.6.36 and is using a buildroot based userland. The root user mapped to "admin" and the device is using a read-only rootfs. More details below:</p>
+
+<pre><code># cat /proc/cpuinfo
+system type             : MT7628
+processor               : 0
+cpu model               : MIPS 24Kc V5.5
+BogoMIPS                : 386.04
+wait instruction        : yes
+microsecond timers      : yes
+tlb_entries             : 32
+extra interrupt vector  : yes
+hardware watchpoint     : yes, count: 4, address/irw mask: [0x0000, 0x0ff8, 0x0ff8, 0x0ff8]
+ASEs implemented        : mips16 dsp
+shadow register sets    : 1
+core                    : 0
+VCED exceptions         : not available
+VCEI exceptions         : not available
+
+# cat passwd
+admin:L4lwAM7zGEySM:0:0:Adminstrator:/:/bin/sh
+
+# mount
+rootfs on / type rootfs (rw)
+/dev/root on / type squashfs (ro,relatime)
+proc on /proc type proc (rw,relatime)
+none on /var type ramfs (rw,relatime)
+none on /etc type ramfs (rw,relatime)
+none on /tmp type ramfs (rw,relatime)
+none on /media type ramfs (rw,relatime)
+none on /sys type sysfs (rw,relatime)
+none on /dev/pts type devpts (rw,relatime,mode=600)
+mdev on /dev type ramfs (rw,relatime)
+devpts on /dev/pts type devpts (rw,relatime,mode=600)
+/dev/mtdblock8 on /mnt type jffs2 (rw,relatime)
+/dev/mtdblock9 on /vendor type jffs2 (rw,relatime)
+/dev/mtdblock9 on /tmp/web type jffs2 (rw,relatime)
+
+# df
+Filesystem           1k-blocks      Used Available Use% Mounted on
+rootfs                    5632      5632         0 100% /
+/dev/root                 5632      5632         0 100% /
+/dev/mtdblock8             512       196       316  38% /mnt
+/dev/mtdblock9            6144       732      5412  12% /vendor
+/dev/mtdblock9            6144       732      5412  12% /tmp/web
+</code></pre>
+
+<p>It seems like the device is using the ralink NVRAM as its main storage for user values. Several scripts were found to reset those values inside and replacing some of its default. Most of the scripts are using the <code>nvram_get</code> utility in order to obtain a specific entry of the NVRAM. The command <code>ralink_init show 2860</code> basically shows every entry of the ralink 2860 chip, where <code>ralink_init clear 2860</code> will clear all of its content. In order to get a single value, <code>nvram_get SSID1</code> can be used or <code>nvram_set SSID1 "bathroom"</code> to set a value.</p>
+
+<h2>Motivation</h2>
+<p>It turned out, whenever I tried to set the devicename to "bathroom", it started to append a random string to the end of the name, so it became <code>bathroomssConnectEm</code> and something along those lines. Frustrated by that, I started playing around with the devicename. It turned out very quickly, it doesn't strip anything I write into the field, I was able to use whitespaces, linebreaks and all that.</p>
+
+<ul>
+    <li>Problem: Device name gets overwritten/appended by other strings</li>
+    <li>Observation: Device name accepts all inputs and looks wonky</li>
+    <li>Result: Obvious...</li>
+</ul>
+
+<h2>Remote Shell</h2>
+<p>By default, the speaker comes in AP mode:</p>
+
+<pre><code>SSID: GGMM_E2_XXX
+Password: ggmm123456
+</code></pre>
+
+<p>The device is running a dnsmasq service that will provide you a <code>10.10.10.x</code> IP address,
+the speaker itself can be found at 10.10.10.254. On port 80 you will be greeted by a webfrontend.
+Since the webfrontend is provided by cgi-scripts running on a lighttpd, it's clear to play around with some parsing issues first.
+Fortunately the only input field you have - the device name - is exploitable.</p>
+
+<p>Knowing this, obtaining a remote shell is as simple as setting the hostname to:</p>
+
+<pre><code>abc`telnetd -l /bin/sh`
+</code></pre>
+
+<p>It's required to either reboot the device or putting it into another WiFi to get our command executed. Since telnetd is already enabled by default in the shipped busybox version, you'll be greeted by a beautiful telnet shell when connecting.
+The device uses <code>admin</code> as the default root user, the password is <code>admin</code> aswell.</p>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../../../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../../../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../../../../">welcome!</a> » <a href="../../../../">Projects</a> » <a href="../../../">wow-addons</a> » <a href="../../">pfQuest</a> » <a href="../">toolbox</a> » <span>pngLua</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="README.md" class="text">
+<p><img src="/logo.png?raw=true" alt="pngLua logo"/></p>
+
+<p>A pure lua implementation of a PNG decoder</p>
+
+<h2>Usage</h2>
+
+<p>To initialize a new png image:</p>
+
+<pre><code>img = pngImage(&lt;path to image&gt;, newRowCallback)
+</code></pre>
+
+<p>The image will then be decoded. The available data from the image is as follows
+```
+img.width = 0
+img.height = 0
+img.depth = 0
+img.colorType = 0</p>
+
+<p>img:getPixel(x, y)
+```
+Decoding the image is synchronous, and will take a long time for large images.</p>
+
+<h2>Support</h2>
+
+<p>The supported colortypes are as follows:</p>
+
+<ul>
+    <li>Grayscale</li>
+    <li>Truecolor</li>
+    <li>Indexed</li>
+    <li>Greyscale/alpha</li>
+    <li>Truecolor/alpha</li>
+</ul>
+
+<p>So far the module only supports 256 Colors in png-8, png-24 as well as png-32 files. and no ancillary chunks.</p>
+
+<p>More than 256 colors might be supported (Bit-depths over 8) as long as they align with whole bytes. These have not been tested.</p>
+
+<p>Multiple IDAT chunks of arbitrary lengths are supported, as well as all filters.</p>
+
+<h2>Errors</h2>
+<p>So far no error-checking has been implemented. No crc32 checks are done.</p>
+
+</div><div class="gallery"><a href="Example.png"><img src="Example.png"/><span>Example</span></a><a href="logo.png"><img src="logo.png"/><span>logo</span></a></div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

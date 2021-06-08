@@ -1,0 +1,68 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../../">welcome!</a> » <a href="../../">Projects</a> » <a href="../">wow-addons</a> » <span>ShaguScore</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="README.md" class="text">
+<h1>ShaguScore</h1>
+
+<p>This AddOn is a GearScore alike item rating. It includes a small database of the itemLevels of all items available in classic up to Naxxramas. Those values are are printed as score, similar to GearScore. Please don't take those values to serious, in vanilla the itemLevel is worth nothing.</p>
+
+<p><img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/ShaguScore/character.jpg" alt="character"/></p>
+
+<h2>Installation</h2>
+<p>1. Download <strong><a href="https://github.com/shagu/ShaguScore/archive/master.zip">Latest Version</a></strong>
+2. Unpack the Zip file
+3. Rename the folder "ShaguScore-master" to "ShaguScore"
+4. Copy "ShaguScore" into Wow-Directory\Interface\AddOns
+5. Restart Wow</p>
+
+<h2>Older Versions</h2>
+
+<p>In older versions this addon did two things, it calculated the average color (rarity) of the player's equip and it aggregated a score of the overall equip.</p>
+
+<p>The score value has been calculated as followed:</p>
+
+<pre><code>Score = Rarity * ItemLevel * Bonus
+</code></pre>
+
+<p><strong>Rarity:</strong>
+<span style="color: #9d9d9d">Poor (0)</span>,
+<span style="color: #000000">Common (1)</span>,
+<span style="color: #1eff00">Uncommon (2)</span>,
+<span style="color: #0080ff">Rare (3)</span>,
+<span style="color: #b048f8">Epic (4)</span>,
+<span style="color: #ff8000">Legendary (5)</span>,
+<span style="color: #e6cc80">Artifact (6)</span></p>
+
+<p><strong>Bonus:</strong> 
+The Bonus is 2 when a TwoHand weapon is used, otherwise it will be 1</p>
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

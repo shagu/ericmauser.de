@@ -1,0 +1,2197 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../">welcome!</a> » <span>Random Notes</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="00-random-notes.md" class="text">
+<h1>Random Notes</h1>
+<h2>Simple webserver with python2</h2>
+<p>start a webserver with directory listing in the current directory:</p>
+<pre><code>python2 -m SimpleHTTPServer 8000
+</code></pre>
+
+<h2>Ubuntu libgl errors</h2>
+<p>To avoid erros with bumblebee hybrid graphic on 32bit applications (e.g. steam)
+do the following:</p>
+
+<pre><code>sudo vim /etc/ld.so.conf.d/optimus.conf
+</code></pre>
+
+<p>Add next two lines to file:</p>
+<pre><code>/usr/lib32
+/usr/lib/i386-linux-gnu/mesa
+</code></pre>
+
+<p>Then execute:</p>
+<pre><code>sudo ldconfig
+</code></pre>
+
+<h2>Transcode movie to HQ h264 via ffmpeg</h2>
+<p>map 0 makes sure that all audio tracks will be present in output file aswell.
+without "veryslow" profile will be great quality, too.</p>
+
+<pre><code>ffmpeg -i INPUT.mkv -map 0 -vcodec libx264 -preset veryslow -acodec libmp3lame OUTPUT.mkv
+</code></pre>
+
+<h2>h264 hardware encoding with gstreamer</h2>
+
+<p>The following command is used to convert any movie to a matroska(mkv) container,
+with a h264 video (scaled down to 720p) and faac audio (with a bitrate of 40000).
+The whole video encoding is hardware accelerated and requires a working gstreamer-vaapi backend.
+The hardware must be able to do h264 encoding (newer intels, nvidia,..)</p>
+
+<pre><code>gst-launch-1.0 filesrc location="~/input.mp4" ! \
+  decodebin name=demux ! \
+  videoscale ! "video/x-raw, width=1280, height=720" ! \
+  vaapiencode_h264 rate-control=1 tune=high-compression cabac=true ! \
+  matroskamux name=mux ! \
+  filesink location="~/output.mkv" demux. ! \
+  audioconvert ! faac bitrate=40000 ! aacparse ! mux.
+</code></pre>
+
+<h2>Get/Set time via date</h2>
+<p>get and set date via timestamp. </p>
+
+<p><strong>get:</strong></p>
+<pre><code>date +%s
+</code></pre>
+
+<p><strong>set:</strong></p>
+<pre><code>date +%s -s "@1384261338"
+</code></pre>
+
+<h2>boblight-X11</h2>
+<p>depends: subversion</p>
+
+<h3>compile</h3>
+<pre><code>svn checkout http://boblight.googlecode.com/svn/trunk/ boblight
+./configure --prefix=/usr --without-portaudio
+</code></pre>
+
+<h3>start</h3>
+<pre><code>boblight-X11 -o speed=42 -o value=5 
+</code></pre>
+
+<h3>Disable guest login on Ubuntu</h3>
+<p><em>Tested on ubuntu 12.04 and ubuntu 14.04.</em>
+edit/create /etc/lightdm/lightdm.conf:</p>
+<pre><code>[SeatDefaults]
+user-session=ubuntu
+greeter-session=unity-greeter
+allow-guest=false
+</code></pre>
+
+<h2>Support for CEC adaptors under gentoo</h2>
+<p>to enable cec support for devices such as the
+pulseeigt-cec adaptor you'll need the following:</p>
+
+<p>in /etc/portage/make.conf:</p>
+
+<pre><code>USE="cec"
+</code></pre>
+
+<p>add the user to uucp:</p>
+
+<pre><code>gpasswd -a &lt;username&gt; uucp
+</code></pre>
+
+<p>enable in kernel CDC-ACM devices:</p>
+
+<pre><code>kernel: USB Modem (CDC ACM) support (CONFIG_USB_ACM)
+</code></pre>
+
+
+<h2>KDE enable samba for dolphin</h2>
+<p>In most cases, dolphin tries to download files from samba shares, instead of
+streaming them / giving the path to the application (vlc, mplayer). 
+To tell KDE to open the files directly, put the following in the applicaions dir:</p>
+
+<pre><code>cp /usr/share/applications/mplayer.desktop /home/$USER/.local/share/applications
+</code></pre>
+
+<p>add the following to /home/$USER/.local/share/applications/mplayer.desktop:</p>
+
+<pre><code>X-KDE-Protocols=http,ftp,smb
+</code></pre>
+
+<p>works with mplayer and vlc and maybe some others too.</p>
+
+<h2>Add the same timestamp to all files</h2>
+<p>timestamp could be e.g 201403270000</p>
+
+<pre><code>find . | xargs touch -h -t $timestamp
+</code></pre>
+
+<h2>Resize DD-Image to max-size</h2>
+
+<pre><code>bzcat image-file.img &gt; /dev/mmcblk0
+sync
+</code></pre>
+
+<p>eject sdcard, insert sdcard to make sure every partition gets reloaded</p>
+<pre><code>fdisk /dev/mmcblk0
+p
+d
+2
+n
+p
+2
+&lt;return&gt;
+&lt;return&gt;
+w
+q
+sync
+</code></pre>
+
+<p>eject sdcard, insert sdcard to make sure every partition gets reloaded</p>
+
+<pre><code>resize2fs /dev/sdb2
+sync
+</code></pre>
+
+<h2>List all modules needed by lspci</h2>
+<p>this prints all modules which are known drivers for lspci detected hardware:</p>
+
+<pre><code>LC_ALL=c lspci -mvk | grep ^Driver | awk '{print $2}' | uniq
+</code></pre>
+
+<h2>Basic pipe-knowledge</h2>
+<p>as the "&lt;" looks often confusing for some people:</p>
+
+<pre><code>vim - &lt; filename
+</code></pre>
+
+<p>the same as:</p>
+
+<pre><code>cat filename | vim -
+</code></pre>
+
+<h2>sed basics</h2>
+<h3>replace</h3>
+
+<pre><code>sed 's/alt/neu/g' filename &gt; changed_file
+sed -i 's/alt/neu/g' filename
+</code></pre>
+
+<h3>delete</h3>
+
+<pre><code>sed -i '/this will be deleted/d' filename
+</code></pre>
+
+<h2>Disable kernel sysrq calls in userland</h2>
+
+<pre><code>sysctl -w kernel.sysrq = 0
+</code></pre>
+
+<h2>Toggle window manager decorations</h2>
+<p>A simple python2 script to toggle window decorations in windowmanagers like marco/metacity:</p>
+
+<pre><code>#!/usr/bin/python
+from gtk.gdk import *
+
+w=window_foreign_new((get_default_root_window().property_get("_NET_ACTIVE_WINDOW")[2][0]))
+state = w.property_get("_NET_WM_STATE")[2]
+maximized='_NET_WM_STATE_MAXIMIZED_HORZ' in state and '_NET_WM_STATE_MAXIMIZED_VERT' in state
+
+if w.get_decorations() != 0 :
+    w.set_decorations(0)
+else:
+    w.set_decorations(DECOR_ALL)
+window_process_all_updates()
+</code></pre>
+
+<h2>Xdefaults</h2>
+<p>colored manpages:</p>
+<pre><code>*colorIT:      #BEC040
+*colorBD:      #728CA6
+*colorUL:      #73C040
+</code></pre>
+
+<h2>show xrdb colors</h2>
+<p>Display colors of xrdb compliant terminals like urxvt and xterm</p>
+
+<pre><code>#!/bin/bash
+xrdb -l ~/.Xdefaults
+colors=($(xrdb -query | sed -n 's/.*color\([0-9]\)/\1/p' | sort -nu | cut -f2))
+for i in {0..7}; do echo -en "\e[0m \e[$((30+$i))m \xE2\x96\x88\xE2\x96\x88 ${colors[i]} \e[0m"; done
+echo
+for i in {8..15}; do echo -en "\e[0m \e[1;$((22+$i))m \xE2\x96\x88\xE2\x96\x88 ${colors[i]} \e[0m"; done
+echo
+</code></pre>
+
+<h2>Screen</h2>
+
+<pre><code>shelltitle "$ |terminal"
+msgwait 2
+vbell off
+
+altscreen on
+term screen-256color
+
+bindkey "^[Od" prev  # change window with ctrl-left
+bindkey "^[Oc" next  # change window with ctrl-right
+
+hardstatus alwayslastline "%{= w}%-w%{= bw} %n %t %{-}%+w %-=%{b}%c:%s"
+</code></pre>
+
+<h2>Archlinux AUR bash/zsh function</h2>
+
+<p>dependency: wget
+add the following to ~/.bashrc or ~/.zshrc:</p>
+
+<pre><code>function aur {
+  if [ "$1" = "-Ss" ]; then
+    wget "https://aur.archlinux.org/packages/?O=0&amp;K=$2&amp;PP=250" -O /tmp/parse.html &amp;&gt; /dev/null
+    grep "\/packages\/" /tmp/parse.html | grep -v "?K=" | cut -d \&gt; -f 3 | cut -d \&lt; -f 1 | grep "$2" --color=always
+    rm /tmp/parse.html
+  elif [ "$1" = "-S" ]; then
+    mkdir ~/aur &amp;&gt; /dev/null || true
+    cd ~/aur
+    wget https://aur.archlinux.org/cgit/aur.git/snapshot/$2.tar.gz -N &amp;&gt; $2.tar.gz.log
+    tar -xzf $2.tar.gz
+    cd $2
+    makepkg -si 
+  fi
+}
+</code></pre>
+
+<h2>ALX Network Driver</h2>
+
+<p>On some distributions the ALX network driver of my Dell XPS One 27 PC wont work.
+This will install the correct driver:</p>
+
+<pre><code>wget https://www.kernel.org/pub/linux/kernel/projects/backports/2013/03/04/compat-drivers-2013-03-04-u.tar.bz2 
+./scripts/driver-select alx
+make
+su -c make install
+</code></pre>
+
+<h2>top 10 commands</h2>
+
+<pre><code>history | awk '{CMD[$2]++;count++;}END { for (a in CMD)print CMD[a] " " CMD[a]/count*100 "% " a;}' | grep -v "./" | column -c3 -s " " -t | sort -nr | nl | head -n10
+</code></pre>
+
+<h2>KDE Kmix Tray Scroll Step</h2>
+<p>in [Globals] in ~/.kde4/share/config/kmixrc:</p>
+
+<pre><code>VolumePercentageStep=2
+</code></pre>
+
+<h2>MP3 remove silence</h2>
+<p>depends on package: sox
+Remove silence on the beginning and the end of MP3 files:</p>
+
+<pre><code>#!/bin/bash
+echo `date` &gt; /tmp/trimp3.log
+for i in *.mp3; do
+    echo -n "removing silence from: $i"
+    sox "$i" "$i".tmp.mp3 silence 1 0.1 0.1% reverse silence 1 0.1 0.1% reverse &amp;&gt;&gt; /tmp/trimp3.log
+    mv "$i".tmp.mp3 "$i"
+    echo "  ... done"
+done
+</code></pre>
+
+<h2>Xorg Display Resolution Scaling</h2>
+<p>this will fake a FullHD resolution for a display with only 1600x900:</p>
+
+<pre><code>xrandr --output LVDS1 --mode 1600x900 --scale 1.2x1.2
+</code></pre>
+
+<h2>Boost mdadm raid resync</h2>
+<h3>Read-Ahead</h3>
+<p>set read-ahead to 4096:</p>
+
+<pre><code>blockdev --setra 4096 /dev/md127
+</code></pre>
+
+<h3>Stripe Cache</h3>
+<p>set stripe cache to 8192</p>
+
+<pre><code>echo 8192 &gt; /sys/block/md127/md/stripe_cache_size
+</code></pre>
+
+<h2>Restore corrupted btrfs pacman files</h2>
+<p>On my notebook i got alot of corrupted files after powerloss.
+I was on a upgrade (pacman -Syu) when the system shut off without syncing.
+The result where alot of files (all new pacman installed files) with size "0".
+btrfs check hasn't found any corruption and pacman thought everything is installed correctely.</p>
+
+<p>This is how i solved it:</p>
+
+<pre><code>pacman -S pkgfile
+pkgfile --update
+pacman -S --force $(for i in $(find /usr -size 0 -type f; do pkgfile $i; done | sort | uniq)
+</code></pre>
+
+<h2>usb issues on some arm devices</h2>
+<p>On some arm devices (pandaboard, odroid-x) i noticed some issues, with usb initialisation of my sat receiver. 
+Adding this to the cmdline solved the problem:</p>
+
+<pre><code>vram=16M coherent_pool=6M
+</code></pre>
+
+<h1>udev rule for static serial interfaces</h1>
+<p>the output of this script must be copied to: /etc/udev/rules.d/<new_rule>.rules</p>
+
+<pre><code>echo "=== enter your data ==="; \
+echo -n "tty (e.g: /dev/ttyUSB0): "; \
+read tty; \
+echo -n "name (e.g: beagle): "; \
+read name; \
+echo "=== copy the following rule to /etc/udev/rules.d/serial.rules ==="; \
+idVendor=$(udevadm info -a -n $tty | grep '{idVendor}' | head -n1 | cut -d \" -f 2); \
+idProduct=$(udevadm info -a -n $tty | grep '{idProduct}' | head -n1 | cut -d \" -f 2); \
+idSerial=$(udevadm info -a -n $tty | grep '{serial}' | head -n1 | cut -d \" -f 2); \
+echo "SUBSYSTEM==\"tty\", ATTRS{idVendor}==\"$idVendor\", ATTRS{idProduct}==\"$idProduct\", ATTRS{serial}==\"$idSerial\", SYMLINK+=\"serial_$name\""
+</code></pre>
+
+</div><div id="aircrack-cheat-sheet.md" class="text">
+<h1>Aircrack Cheat Sheet</h1>
+
+<h2>start monitor</h2>
+
+<pre><code>airmon-ng start wlp1s0
+</code></pre>
+
+<h2>dump all</h2>
+
+<pre><code>airodump-ng wlp1s0mon
+</code></pre>
+
+<h2>dump specific to file</h2>
+
+<pre><code>airodump-ng -c 1 --bssid 84:9C:A6:28:62:DA -w HAIR_wpa wlp1s0mon --ignore-negative-one
+
+-c channel
+--bssid router
+-w filename
+--ignore-negative-one Removes 'fixed channel : -1' message
+</code></pre>
+
+<h2>deauth broadcast</h2>
+
+<pre><code>aireplay-ng --deauth 100 -a 84:9C:A6:28:62:DA wlp1s0mon --ignore-negative-one
+</code></pre>
+
+<h2>specific deauth</h2>
+
+<pre><code>aireplay-ng --deauth 100 -a 84:9C:A6:28:62:DA -c AA:BB:CC:DD:EE:FF wlp1s0mon --ignore-negative-one
+</code></pre>
+
+
+</div><div id="android-backup-restore.md" class="text">
+<h1>Android Phone Backup/Restore</h1>
+
+<h2>adb backup</h2>
+
+<pre><code>adb backup -apk -shared -all -f backup-file.adb
+adb backup -apk -shared -all -f backup.ab
+adb install /path/to/file/app.apk
+adb restore backup-file.adb
+</code></pre>
+
+<h2>FDroid Fetcher</h2>
+
+<pre><code>function f_droid() {
+  curl -s https://f-droid.org/packages/$1/ | grep "package-version-download" -A 1 | head -n 2 | tail -n 1 | sed -n 's/.*href="\(.*\)".*/\1/p'
+}
+</code></pre>
+
+
+</div><div id="archlinux-fulldisk-encryption.md" class="text">
+<h1>Install Archlinux with FullDisk Encryption</h1>
+
+<h2>Setup the live environment</h2>
+<pre><code>loadkeys de-latin1
+wifi-menu
+</code></pre>
+
+<h2>Setup the partitions</h2>
+
+<pre><code>cfdisk /dev/sda
+mkfs.ext4 /dev/sda1 -L boot
+cryptsetup -c aes-xts-plain64 -y -s 512 luksFormat /dev/sdX2
+cryptsetup luksOpen /dev/sda2 rootfs
+mkfs.ext4 /dev/mapper/rootfs -L system
+
+mount /dev/mapper/rootfs /mnt
+mkdir /mnt/boot
+mount /dev/sda1 /mnt/boot
+</code></pre>
+
+<h2>Main installation</h2>
+
+<pre><code>pacstrap /mnt base base-devel
+pacstrap /mnt grub-bios
+pacstrap /mnt &lt;your software&gt;
+
+genfstab -p -U /mnt &gt; /mnt/etc/fstab
+</code></pre>
+
+<h2>System configuration</h2>
+
+<pre><code>arch-chroot /mnt
+vi /etc/locale.gen
+  de_DE.UTF-8 UTF-8
+  en_GB.UTF-8 UTF-8
+locale-gen
+echo LANG=de_DE.UTF-8 &gt; /etc/locale.conf
+export LANG=de_DE.UTF-8
+
+vi /etc/vconsole.conf
+  KEYMAP="de-latin1-nodeadkeys"
+  FONT=Lat2-Terminus16
+  FONT_MAP=
+
+ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+echo HOSTNAME &gt; /etc/hostname
+</code></pre>
+
+<h2>Modify the initramfs</h2>
+
+<pre><code>vi /etc/mkinitcpio.conf
+- Add "keymap" and "encrypt" before "filesystems" in the HOOKS
+mkinitcpio -p linux
+</code></pre>
+
+<h2>Bootloader</h2>
+
+<pre><code>grub-install /dev/sda
+vi /etc/default/grub
+  GRUB_CMDLINE_LINUX="cryptdevice=/dev/sda2:rootfs"
+grub-mkconfig -o /boot/grub/grub.cfg
+</code></pre>
+
+<h2>Finish the installation</h2>
+
+<pre><code>passwd
+exit
+reboot
+</code></pre>
+
+</div><div id="archlinux-htpc.md" class="text">
+<h1>Install Archlinux on Multimedia PC</h1>
+
+<p>This describes how to install archlinux with xbmc and hardware video decoding
+for an AMD APU (E-350) using the opensource radeon drivers.</p>
+
+<h2>Setup the live environment</h2>
+
+<pre><code>loadkeys de-latin1
+wifi-menu
+</code></pre>
+
+<h2>Setup partitions</h2>
+
+<pre><code>cfdisk /dev/sda
+mkfs.ext4 /dev/sda1 -L system
+mount /dev/sda1 /mnt
+</code></pre>
+
+<h2>Main installation</h2>
+
+<pre><code>pacstrap /mnt base base-devel
+pacstrap /mnt syslinux
+
+genfstab -p -U /mnt &gt; /mnt/etc/fstab
+arch-chroot /mnt
+</code></pre>
+
+<h2>System configuration</h2>
+
+<pre><code>vi /etc/locale.gen
+  de_DE.UTF-8 UTF-8
+  en_GB.UTF-8 UTF-8
+locale-gen
+echo LANG=de_DE.UTF-8 &gt; /etc/locale.conf
+export LANG=de_DE.UTF-8
+
+vi /etc/vconsole.conf
+  KEYMAP="de-latin1-nodeadkeys"
+  FONT=Lat2-Terminus16
+  FONT_MAP=
+
+ln -s /usr/share/zoneinfo/Europe/Berlin /etc/localtime
+ln -s /dev/null /etc/udev/rules.d/80-net-name-slot.rules
+echo HOSTNAME &gt; /etc/hostname
+</code></pre>
+
+<h2>Software installation</h2>
+
+<pre><code>pacman -S xorg xorg-xinit xbmc libva-vdpau-driver wicd
+systemctl enable wicd
+</code></pre>
+
+<h2>Create and setup a new user</h2>
+
+<pre><code>passwd
+useradd eric -m -G users,audio,video,games,network,optical,storage,wheel
+passwd eric
+su -l eric -c "echo xbmc-standalone &gt; /home/eric/.xinitrc"
+</code></pre>
+
+<h2>Make use of the video decoding on the new OSS radeon drivers</h2>
+
+<pre><code>vi /etc/profile.d/radeon.sh
+  export LIBVA_DRIVER_NAME=vdpau
+  export VDPAU_DRIVER=r600
+chmod +x /etc/profile.d/radeon.sh
+</code></pre>
+
+<h2>Bootloader</h2>
+
+<pre><code>syslinux-install_update -i -a -m
+vi /boot/syslinux/syslinux.cfg
+  PROMPT 1
+  TIMEOUT 50 
+  DEFAULT arch
+
+  LABEL arch
+      LINUX ../vmlinuz-linux
+      APPEND root=/dev/sda1 rw quiet radeon.dpm=1 radeon.audio=1 clocksource=hpet hpet=enable
+      INITRD ../initramfs-linux.img
+</code></pre>
+
+<h2>Finish the installation</h2>
+
+<pre><code>exit
+reboot
+</code></pre>
+
+<h2>Blu-Ray</h2>
+<p>for bluray support follow those instructions: <a href="http://vlc-bluray.whoknowsmy.name/">vlc-bluray</a>.
+It will make it possible to watch some of the encrypted bluray discs.</p>
+
+</div><div id="cinnamon.md" class="text">
+<h1>Cinnamon</h1>
+<h2>Gsettings</h2>
+<p>update: since version 2.0+ cinnamon is using its own config strings, 
+the gnome settings from above will not work anymore
+update: cinnamon 2.6.x changed the gsetting paths (keybindings updated)</p>
+
+<p>show settings:</p>
+<pre><code>gsettings list-recursively org.cinnamon.desktop.media-handling
+</code></pre>
+
+<p>deactivate automount:</p>
+<pre><code>gsettings set org.cinnamon.desktop.media-handling automount 'false'
+gsettings set org.cinnamon.desktop.media-handling automount-open 'false' 
+</code></pre>
+
+<p>desktop font:</p>
+<pre><code>gsettings set org.nemo.desktop font 'Sans 8'
+</code></pre>
+
+<p>keyboard shortcuts:</p>
+<pre><code>gsettings set org.cinnamon.desktop.keybindings.media-keys screensaver "['&lt;Super&gt;l']"
+gsettings set org.cinnamon.desktop.keybindings.media-keys terminal "['&lt;Super&gt;1']"
+gsettings set org.cinnamon.desktop.keybindings.media-keys www "['&lt;Super&gt;2']"
+gsettings set org.cinnamon.desktop.keybindings.media-keys home "['&lt;Super&gt;3']"
+gsettings set org.cinnamon.desktop.keybindings.wm panel-run-dialog "['&lt;Super&gt;0']"
+gsettings set org.cinnamon.desktop.keybindings.wm minimize "['&lt;Alt&gt;s']"
+gsettings set org.cinnamon.desktop.keybindings.wm close "['&lt;Alt&gt;c']"
+gsettings set org.cinnamon.desktop.keybindings.wm toggle-maximized "['&lt;Alt&gt;v']"
+gsettings set org.cinnamon.desktop.keybindings.wm toggle-fullscreen "['&lt;Alt&gt;f']"
+gsettings set org.cinnamon.desktop.keybindings.wm move-to-workspace-left "['&lt;Shift&gt;&lt;Alt&gt;Left']"
+gsettings set org.cinnamon.desktop.keybindings.wm move-to-workspace-right "['&lt;Shift&gt;&lt;Alt&gt;Right']"
+gsettings set org.cinnamon.desktop.keybindings.wm switch-to-workspace-1 "['&lt;Alt&gt;F1']"
+gsettings set org.cinnamon.desktop.keybindings.wm switch-to-workspace-2 "['&lt;Alt&gt;F2']"
+gsettings set org.cinnamon.desktop.keybindings.wm switch-to-workspace-3 "['&lt;Alt&gt;F3']"
+gsettings set org.cinnamon.desktop.keybindings.wm switch-to-workspace-4 "['&lt;Alt&gt;F4']"
+gsettings set org.cinnamon.desktop.keybindings.wm switch-to-workspace-5 "['&lt;Alt&gt;F5']"
+gsettings set org.cinnamon.desktop.keybindings.wm switch-to-workspace-down "['&lt;Control&gt;&lt;Alt&gt;Down']"
+gsettings set org.cinnamon.desktop.keybindings.wm switch-to-workspace-up "['&lt;Control&gt;&lt;Alt&gt;Up']"
+gsettings set org.cinnamon.desktop.keybindings.wm switch-to-workspace-left "['&lt;Control&gt;&lt;Alt&gt;Left']"
+gsettings set org.cinnamon.desktop.keybindings.wm switch-to-workspace-right "['&lt;Control&gt;&lt;Alt&gt;Right']"
+gsettings set org.cinnamon.desktop.keybindings.wm move-to-workspace-1 "['&lt;Alt&gt;&lt;Shift&gt;F1']"
+gsettings set org.cinnamon.desktop.keybindings.wm move-to-workspace-2 "['&lt;Alt&gt;&lt;Shift&gt;F2']"
+gsettings set org.cinnamon.desktop.keybindings.wm move-to-workspace-3 "['&lt;Alt&gt;&lt;Shift&gt;F3']"
+gsettings set org.cinnamon.desktop.keybindings.wm move-to-workspace-4 "['&lt;Alt&gt;&lt;Shift&gt;F4']"
+gsettings set org.cinnamon.desktop.keybindings.wm move-to-workspace-5 "['&lt;Alt&gt;&lt;Shift&gt;F5']"
+</code></pre>
+
+<h2>Change Desktop Colors</h2>
+<p>This is to change the desktop text color in Cinnamon, 
+simply edit in your gtk CSS file the nemo desktop settings.</p>
+
+<pre><code>~/.config/gtk-3.0/gtk.css:
+.nemo-desktop.nemo-canvas-item {
+  color: #CCCCCC;
+  text-shadow: 1px 1px @desktop_item_text_shadow;
+}
+</code></pre>
+
+<h2>Systray Icon Size</h2>
+<p>the tray icon size is defined in: /usr/share/cinnamon/applets/systray@cinnamon.org/applet.js</p>
+
+</div><div id="cmangos-classic.md" class="text">
+<h1>CMaNGOS Classic Quick Install Instructions</h1>
+<h2>Server</h2>
+
+<pre><code>mkdir server
+cd server/
+git clone git://github.com/cmangos/mangos-classic.git
+cd mangos-classic/
+mkdir build
+cd build/
+cmake .. -DBUILD_EXTRACTORS=1 -DCMAKE_INSTALL_PREFIX=../out
+make
+make install
+cd ..
+ln -sf mangosd.conf.dist out/etc/mangosd.conf
+ln -sf realmd.conf.dist out/etc/realmd.conf
+ln -sf playerbot.conf.dist out/etc/playerbot.conf
+</code></pre>
+
+<h2>Client Data</h2>
+
+<pre><code>cp out/bin/tools/* /tmp/WoW-1.12.1-enUS/
+cd /tmp/WoW-1.12.1-enUS/
+chmod +x ExtractResources.sh
+./ExtractResources.sh
+cd -
+cp -rf /tmp/WoW-1.12.1-enUS/{maps,dbc,vmaps,mmaps,Cameras} out/bin
+</code></pre>
+
+<h1>Database</h1>
+
+<pre><code>mysql -uroot -p &lt; sql/create/db_create_mysql.sql
+mysql -uroot -p classicmangos &lt; sql/base/mangos.sql
+
+for sql_file in $(ls sql/base/dbc/original_data/*.sql); do mysql -uroot -p --database=classicmangos &lt; $sql_file ; done
+for sql_file in $(ls sql/base/dbc/cmangos_fixes/*.sql); do mysql -uroot -p --database=classicmangos &lt; $sql_file ; done
+
+mysql -uroot -p classiccharacters &lt; sql/base/characters.sql
+mysql -uroot -p classicrealmd &lt; sql/base/realmd.sql
+
+git clone git://github.com/cmangos/classic-db.git
+cd classic-db
+./InstallFullDB.sh; vim InstallFullDB.config
+./InstallFullDB.sh
+</code></pre>
+
+<h1>launch</h1>
+
+<pre><code>cd out/bin
+./realmd &amp;
+./mangosd
+</code></pre>
+
+</div><div id="custom-resolution.md" class="text">
+<h1>Custom Screen Resolution</h1>
+
+<p>A small bash function to add custom screen resolutions - that are not detected automatically - to your display. Add the following to the <code>~/.bashrc</code>:</p>
+
+<pre><code>function resolution {
+  if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "USAGE:"
+    echo "  resolution WIDTH HEIGHT [DISPLAY]"
+  else
+    settings=$(cvt $1 $2 | sed -n 's/^.*"\(.*\)"\(.*\)$/\1,\2/p')
+    name=$(echo "$settings" | cut -d , -f 1)
+    opts=$(echo "$settings" | cut -d , -f 2)
+
+    if [ -z "$3" ]; then
+      display=$(xrandr | sed -n "s/\(.*\) connected.*/\1/p" | head -n 1)
+    else
+      display=$3
+    fi
+
+    xrandr --newmode "$name" $opts
+    xrandr --addmode $display "$name"
+  fi
+}
+</code></pre>
+
+<p>Usage: <code>resolution WIDTH HEIGHT [DISPLAY]</code>
+Example: <code>resolution 800 600 eDP-1</code></p>
+
+</div><div id="debootstrap.md" class="text">
+<h1>Debootstrap</h1>
+<h2>Cross</h2>
+<p>Creating rootfs-tarball for foreign architecture:</p>
+
+<pre><code>debootstrap --foreign --no-check-gpg --arch=armhf testing /debian-armhf http://ftp.debian.org/debian/ 
+</code></pre>
+
+<p>Boot the target and run the second stage:</p>
+
+<pre><code>/debootstrap/debootstrap --second-stage
+</code></pre>
+
+<h2>Native</h2>
+<p>creating rootfs-tarball for native architecture:</p>
+
+<pre><code>debootstrap --no-check-gpg testing /debian http://ftp.debian.org/debian/ 
+</code></pre>
+
+
+<h2>Ubuntu</h2>
+
+<pre><code>debootstrap trusty ./trusty http://archive.ubuntu.com/ubuntu/
+</code></pre>
+
+
+<h1>apt-get source</h1>
+<p>build packages out of deb-src repositories:</p>
+
+<pre><code>apt-get source &lt;package&gt;
+cd &lt;package&gt;/
+vim &lt;stuff&gt;
+apt-get -b source &lt;package&gt;
+dpkg -i &lt;package&gt;
+</code></pre>
+
+</div><div id="git.md" class="text">
+<h1>Git</h1>
+
+<h2>add alias for unstaging</h2>
+<pre><code>git config --global alias.unstage "reset HEAD"
+</code></pre>
+
+<h2>default git prune</h2>
+<pre><code>git config --global fetch.prune true
+</code></pre>
+
+<p>for default on pull:</p>
+<pre><code>git config --global pull.rebase true
+</code></pre>
+
+<h2>show database statistics</h2>
+<pre><code>git count-objects -v
+</code></pre>
+
+<h2>compress database</h2>
+<pre><code>git repack
+</code></pre>
+
+<h2>verify files in git</h2>
+<pre><code>git fsck --full
+</code></pre>
+
+<h2>diff HEAD to previous HEAD</h2>
+<pre><code>git diff HEAD HEAD^
+</code></pre>
+<p>or:</p>
+<pre><code>git diff HEAD HEAD~1
+</code></pre>
+
+<h2>.gitignore</h2>
+<pre><code>/absolute/path
+relative/path
+*.todo
+!exception for this.todo
+</code></pre>
+
+<h2>replace all local files by HEAD</h2>
+<pre><code>git reset --hard HEAD
+</code></pre>
+
+<h2>replace only one file by HEAD</h2>
+<pre><code>git checkout HEAD foo.txt
+</code></pre>
+
+<h2>change last commit</h2>
+<pre><code>git commit --amend
+</code></pre>
+
+<h2>show ALL git commits and revert to deleted commit</h2>
+<pre><code>git reflog
+git reset --hard e6b0203
+</code></pre>
+
+<h2>create branch</h2>
+<pre><code>git branch &lt;NAME&gt;
+</code></pre>
+
+<h2>switch branch</h2>
+<pre><code>git checkout &lt;NAME&gt;
+</code></pre>
+
+<h2>create and switch</h2>
+<pre><code>git checkout -b &lt;NAME&gt;
+</code></pre>
+
+<h2>merge</h2>
+<pre><code>git merge &lt;branch&gt;
+</code></pre>
+
+<h2>conflict</h2>
+<pre><code>git checkout --theirs &lt;file&gt;
+git checkout --ours &lt;file&gt;
+</code></pre>
+
+<h2>create git bare repository</h2>
+<pre><code>git clone --bare &lt;myfiles&gt; newrepo.git
+</code></pre>
+
+<h2>rebase</h2>
+<pre><code>git rebase &lt;branch&gt;
+</code></pre>
+
+<h2>interactive rebase</h2>
+<pre><code>git rebase -i &lt;branch&gt;
+</code></pre>
+
+<h2>apply single commit to branch</h2>
+<pre><code>git cherry-pick &lt;REF&gt;
+</code></pre>
+
+<h2>git show refs (e.g. bitbake recipes)</h2>
+<pre><code>git show-ref
+</code></pre>
+
+<h2>push tags</h2>
+<pre><code>git push --tags
+</code></pre>
+
+<h2>delete local tag / branch</h2>
+<pre><code>git tag -d &lt;name&gt;
+git branch -d &lt;branch&gt;
+</code></pre>
+
+<h2>delete remote tag / branch</h2>
+<pre><code>git push origin :refs/tags/v1.0
+git push origin :refs/heads/testing
+</code></pre>
+
+<h2>stash (+ untracked files)</h2>
+<pre><code>git stash -u
+git stash pop
+git stash list
+git stash pop stash@{1}
+</code></pre>
+
+</div><div id="global-app-menu-in-mate.md" class="text">
+<h1>Global App-Menu in MATE</h1>
+
+<h2>Install dependencies</h2>
+
+<pre><code>pacman -S cmake appmenu-qt4 libdbusmenu-glib libdbusmenu-gtk2 libdbusmenu-gtk3
+</code></pre>
+
+<h2>Build the source</h2>
+
+<pre><code>git clone https://github.com/rilian-la-te/vala-panel-appmenu.git
+cd vala-panel-appmenu
+git submodule init &amp;&amp; git submodule update
+mkdir build
+cd build
+
+cmake -DENABLE_MATE=ON -DENABLE_UNITY_GTK_MODULE=ON -DCMAKE_INSTALL_PREFIX=/usr ..
+make &amp;&amp; sudo make install
+</code></pre>
+
+<h2>Write configs</h2>
+
+<pre><code>cat &gt;&gt; ~/.zshrc &lt;&lt; EOF
+if [ -n "$GTK_MODULES" ]; then
+    GTK_MODULES="${GTK_MODULES}:unity-gtk-module"
+else
+    GTK_MODULES="unity-gtk-module"
+fi
+
+if [ -z "$UBUNTU_MENUPROXY" ]; then
+    UBUNTU_MENUPROXY=1
+fi
+
+export GTK_MODULES
+export UBUNTU_MENUPROXY
+EOF
+
+cat &gt;&gt; .config/gtk-3.0/settings.ini &lt; EOF
+gtk-shell-shows-app-menu=true
+gtk-shell-shows-menubar=true
+EOF
+</code></pre>
+
+</div><div id="gnome.md" class="text">
+<h1>Gnome</h1>
+<h2>Gsettings</h2>
+
+<pre><code># enable fractional scaling on wayland
+gsettings set org.gnome.mutter experimental-features "['scale-monitor-framebuffer']"
+
+# enable debugger
+gsettings set org.gtk.Settings.Debug enable-inspector-keybinding true
+
+# touchpad and mouse settings
+gsettings set org.gnome.desktop.peripherals.touchpad disable-while-typing false
+gsettings set org.gnome.desktop.peripherals.touchpad click-method 'areas'
+gsettings set org.gnome.desktop.wm.preferences resize-with-right-button true
+gsettings set org.gnome.desktop.wm.preferences mouse-button-modifier '&lt;Alt&gt;'
+
+# behaviour and appearance
+gsettings set org.gnome.desktop.wm.preferences button-layout ':minimize,maximize,close'
+gsettings set org.gtk.Settings.FileChooser sort-directories-first true
+gsettings set org.gnome.nautilus.preferences recursive-search "never"
+gsettings set org.gnome.shell.overrides attach-modal-dialogs false
+
+# disable automount
+gsettings set org.gnome.desktop.media-handling automount 'false'
+gsettings set org.gnome.desktop.media-handling automount-open 'false' 
+
+# disable system sounds
+gsettings set org.gnome.desktop.sound event-sounds false
+
+# epiphany settings
+gsettings set org.gnome.Epiphany default-search-engine 'Google'
+gsettings set org.gnome.Epiphany homepage-url 'about:blank'
+
+# terminal settings
+gsettings set org.gnome.Terminal.Legacy.Settings theme-variant 'dark'
+gsettings set org.gnome.Terminal.Legacy.Settings default-show-menubar false
+gsettings set org.gnome.Terminal.Legacy.Settings confirm-close false
+
+# enable night shift
+gsettings set org.gnome.settings-daemon.plugins.color night-light-temperature 5500
+gsettings set org.gnome.settings-daemon.plugins.color night-light-enabled true
+
+# keybinds
+gsettings set org.gnome.settings-daemon.plugins.media-keys custom-keybindings "['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']"
+gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ name 'Terminal'
+gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ command 'gnome-terminal'
+gsettings set org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/ binding '&lt;Super&gt;1'
+gsettings set org.gnome.settings-daemon.plugins.media-keys www '&lt;Super&gt;2'
+gsettings set org.gnome.settings-daemon.plugins.media-keys home '&lt;Super&gt;3'
+
+gsettings set org.gnome.desktop.wm.keybindings close "['&lt;Alt&gt;c']"
+gsettings set org.gnome.desktop.wm.keybindings toggle-maximized "['&lt;Alt&gt;v']"
+gsettings set org.gnome.desktop.wm.keybindings minimize "['&lt;Alt&gt;s']"
+gsettings set org.gnome.desktop.wm.keybindings toggle-fullscreen "['&lt;Alt&gt;f']"
+gsettings set org.gnome.desktop.wm.keybindings always-on-top "['&lt;Alt&gt;t']"
+
+for i in $(seq 1 9); do gsettings set org.gnome.shell.keybindings switch-to-application-$i "['&lt;Super&gt;&lt;Shift&gt;$i']"; done
+</code></pre>
+
+<h2>Terminal Internal Padding</h2>
+
+<p>add the following to ~/.config/gtk-3.0/gtk.css:</p>
+
+<pre><code> TerminalScreen {
+   -VteTerminal-inner-border: 10px 10px 10px 10px;
+ }
+</code></pre>
+
+<h2>Terminal Force Quit</h2>
+
+<p>This removes the "really-quit" dialog on gnome-terminal:</p>
+
+<pre><code>gconftool-2 --set --type bool /apps/gnome-terminal/global/confirm_window_close false
+</code></pre>
+
+<h1>Terminal: Scroll in GNU/Screen</h1>
+<p>into ~/.screenrc:</p>
+
+<pre><code># enable scrolling
+termcapinfo xterm ti@:te@
+# bind page up/down
+bindkey -m "^[[5;2~" stuff ^b
+bindkey -m "^[[6;2~" stuff ^f 
+</code></pre>
+
+</div><div id="hp-envy-photo-6230.md" class="text">
+<h1>HP Envy Photo 6230</h1>
+
+<pre><code>pacman -S cups hplip
+systemctl enable cups.service
+systemctl start cups.service
+hp-setup -i HP6A0C9C
+</code></pre>
+
+</div><div id="irssi-notification.md" class="text">
+<h1>irssi notify for awesome</h1>
+
+<h2>irssi plugin</h2>
+<p><strong>~/.irssi/scripts/autorun/awnotify.pl:</strong></p>
+
+<pre><code>use strict;
+use Irssi;
+
+sub hilight {
+    my ($dest, $text, $stripped) = @_;
+    if ($dest-&gt;{level} &amp; MSGLEVEL_HILIGHT) {
+        filewrite($dest-&gt;{target}. " " .$stripped );
+    }
+}
+
+sub filewrite {
+    my ($text) = @_;
+    $text =~ s/\n/ /;
+    $text =~ s/[&lt;@&amp;]//g;
+
+    my @values = split(' ', $text, 4);
+
+    `echo '$values[1] $values[3]' &gt;&gt; /var/tmp/irssi-notify`;
+    `notify-send '&lt;span color="#aaaaaa"&gt;$values[1]&lt;/span&gt; $values[3]'`;
+}
+
+sub del_notify {
+    `echo &gt; /var/tmp/irssi-notify`;
+}
+
+Irssi::signal_add_last("print text", "hilight");
+Irssi::signal_add('gui key pressed', 'del_notify');
+</code></pre>
+
+<h2>notify-daemon</h2>
+<p><strong>~/.config/autorun/awnotify.sh:</strong></p>
+
+<pre><code>#/bin/sh 
+while true; do
+echo -n `echo "irssiwidget.text = ' [&lt;span color=\"#aaaaaa\"&gt;im &lt;/span&gt;&lt;span color=\"#ffffff\"&gt;"``cat /var/tmp/irssi-notify | grep -c "&gt;"`"&lt;/span&gt;] '"  | awesome-client
+sleep 1
+done &amp;
+</code></pre>
+
+
+<h2>awesome-config</h2>
+<p><strong>~/.config/awesome/rc.lua:</strong></p>
+
+<pre><code>irssiwidget = widget({ type = "textbox" })
+mywibox[s].widgets = { 
+    [...]
+    irssiwidget,
+    [...]
+}
+</code></pre>
+
+</div><div id="kernel.md" class="text">
+<h1>Linux Kernel</h1>
+<h2>suspend to memory</h2>
+
+<pre><code>echo -n mem &gt; /sys/power/state
+</code></pre>
+
+<h3>Enable it for users</h3>
+
+<p>in ./kernel/power/power.h:70 change "mode = 0644" to:</p>
+
+<pre><code>#define power_attr(_name) \
+static struct kobj_attribute _name##_attr = {   \
+        .attr   = {                             \
+                .name = __stringify(_name),     \
+                .mode = 0777,                   \
+        },                                      \
+        .show   = _name##_show,                 \
+        .store  = _name##_store,                \
+}
+</code></pre>
+
+</div><div id="libreelec-x86_64.md" class="text">
+<h1>Build LibreELEC x86_64</h1>
+
+<p>This describes how to build LibreELEC on x86_64 and how to patch it, in order to build custom addons into the image.</p>
+
+<h2>Setup and prepare LXC Container</h2>
+
+<pre><code>lxc-create -n libreelec -t ubuntu
+sed -i "s/lxc.net.0.type = empty/lxc.net.0.type = none/g" /var/lib/lxc/libreelec/config
+
+lxc-start  -n libreelec
+lxc-attach -n libreelec
+
+echo 'echo "nameserver 8.8.8.8" &gt; /etc/resolv.conf' &gt;&gt; /root/.bashrc &amp;&amp; exit
+lxc-attach -n libreelec
+
+source /etc/environment
+source /etc/profile
+
+apt-get update &amp;&amp; apt-get upgrade
+apt-get install build-essential gcc make git unzip wget xz-utils python \
+  bc patchutils gawk gperf zip lzop xfonts-utils xfonts-utils xfonts-utils \
+  xsltproc default-jre libncurses5-dev libjson-perl libxml-parser-perl libz-dev
+dpkg-reconfigure dash
+# select "no"
+</code></pre>
+
+<h2>Get the Sources</h2>
+
+<pre><code>su -l ubuntu
+source /etc/environment
+
+git config --global user.email "build@libreelec"
+git config --global user.name "Build User"
+
+git clone https://github.com/LibreELEC/LibreELEC.tv.git
+cd ~/LibreELEC.tv
+</code></pre>
+
+<h2>Patch LibreELEC</h2>
+
+<p>This patch allows to build and pre-install addons during the build process:</p>
+
+<pre><code>diff --git a/config/show_config b/config/show_config
+index 3de77b4..efa2854 100644
+--- a/config/show_config
++++ b/config/show_config
+@@ -156,6 +156,10 @@ show_config() {
+   config_message="$config_message\n - Default Skin:\t\t\t $SKIN_DEFAULT"
+   config_message="$config_message\n - Include extra fonts:\t\t\t $KODI_EXTRA_FONTS"
+
++  for config_addon in $ADDITIONAL_ADDONS; do
++    config_message="$config_message\n - Include Addon:\t\t\t $config_addon"
++  done
++
+   if [ "$(type -t show_distro_config)" = "function" ]; then
+     show_distro_config
+   fi
+diff --git a/distributions/LibreELEC/options b/distributions/LibreELEC/options
+index 0855ebb..4cbffe2 100644
+--- a/distributions/LibreELEC/options
++++ b/distributions/LibreELEC/options
+@@ -64,6 +64,11 @@
+ # e.g. ADDITIONAL_DRIVERS="DRIVER1 DRIVER2"
+   ADDITIONAL_DRIVERS="RTL8192CU RTL8192DU RTL8192EU RTL8188EU RTL8812AU"
+
++# additional addons to install:
++# Space separated list is supported,
++# e.g. ADDITIONAL_ADDONS="game.libretro game.libretro.2048 vdr-addon"
++  ADDITIONAL_ADDONS="game.libretro game.libretro.2048 vdr-addon"
++
+ # build and install bluetooth support (yes / no)
+   BLUETOOTH_SUPPORT="yes"
+
+diff --git a/scripts/image b/scripts/image
+index d21e067..3e4211a 100755
+--- a/scripts/image
++++ b/scripts/image
+@@ -167,6 +167,9 @@ $SCRIPTS/install network
+ # Multimedia support
+ [ ! "$MEDIACENTER" = "no" ] &amp;&amp; $SCRIPTS/install mediacenter
+
++# Additional addons
++[ ! "$MEDIACENTER" = "no" ] &amp;&amp; $SCRIPTS/include_addon $ADDITIONAL_ADDONS
++
+ # Sound support
+ [ "$ALSA_SUPPORT" = "yes" ] &amp;&amp; $SCRIPTS/install alsa
+
+diff --git a/scripts/include_addon b/scripts/include_addon
+new file mode 100755
+index 0000000..bf64425
+--- /dev/null
++++ b/scripts/include_addon
+@@ -0,0 +1,18 @@
++#!/bin/bash
++
++for addon in $@; do
++  echo -e "\e[1;33m  ADDON \e[0m$addon"
++  . config/options $addon
++
++  $SCRIPTS/create_addon $addon &amp;&gt; /dev/null
++
++  cp -rf "$ADDON_BUILD/$PKG_ADDON_ID" \
++         "$INSTALL/usr/share/kodi/addons/"
++
++  # enable non-systemd addons
++  SYSTEMD_SERVICE="$INSTALL/usr/share/kodi/addons/$PKG_ADDON_ID/system.d/$PKG_ADDON_ID.service"
++  if [ ! -f "$SYSTEMD_SERVICE" ]; then
++    ADDON_MANIFEST=$INSTALL/usr/share/kodi/system/addon-manifest.xml
++    xmlstarlet ed -L --subnode "/addons" -t elem -n "addon" -v "$PKG_ADDON_ID" $ADDON_MANIFEST
++  fi
++done
+</code></pre>
+
+<h2>Configure LibreELEC</h2>
+
+<p>The main configuration can be done by editing the file: <code>distributions/LibreELEC/options</code></p>
+
+<h2>Start the build</h2>
+
+<pre><code>PROJECT=Generic ARCH=x86_64 make
+</code></pre>
+
+
+</div><div id="mount-raw-image-partition.md" class="text">
+<h1>Mount RAW-Image Paritions</h1>
+
+<ul>
+    <li>depends: <code>kpartx</code>, <code>dmsetup</code></li>
+</ul>
+
+<h2>Commands</h2>
+
+<pre><code>losetup /dev/loop0 raw-image.dd
+echo "0 `blockdev --getsize /dev/loop0` linear /dev/loop0 0" | dmsetup create sdx
+kpartx -a /dev/mapper/sdx
+mount /dev/mapper/sdx1 /mnt
+</code></pre>
+
+</div><div id="mplayer.md" class="text">
+<h1>mplayer</h1>
+<h2>youtube</h2>
+
+<p>package: </p>
+<pre><code>youtube-dl (git), mplayer
+</code></pre>
+
+<p>usage:</p>
+<pre><code>mplayer -cache 2048 `youtube-dl "$1" -g` 2&gt;&amp;1
+</code></pre>
+
+<h2>webcam</h2>
+
+<p>package: </p>
+<pre><code>mplayer (use flag: v4l2)
+</code></pre>
+
+<p>record:</p>
+<pre><code>mencoder -tv driver=v4l2:fps=25:height=600:width=800 -ovc raw -vf scale=800:600 -o $1 tv:// -nosound
+</code></pre>
+
+<p>view:</p>
+<pre><code>mplayer tv:// -tv driver=v4l2:width=800:height=600:device=/dev/video0
+</code></pre>
+
+</div><div id="navilock-gps-nl-454us.md" class="text">
+<h1>NAVILOCK GPS NL-454US USB</h1>
+
+<h2>Setup the device</h2>
+
+<pre><code>stty 38400 raw &lt;/dev/ttyUSB2
+gpsd -D 5 -N -n /dev/ttyUSB2
+# or
+gpsd /dev/ttyUSB2
+</code></pre>
+
+<h2>Show satellites</h2>
+
+<pre><code>xgps
+</code></pre>
+
+</div><div id="nvidia-optimus-freebsd.md" class="text">
+<h1>NVIDIA Optimus on FreeBSD</h1>
+
+<h2>Install Dependencies</h2>
+
+<pre><code>pkg install gcc
+pkg install libjpeg-turbo
+pkg install virtualgl
+</code></pre>
+
+<h2>Build the driver</h2>
+
+<pre><code>cd /usr/ports/x11/nvidia-drivers
+make clean install
+</code></pre>
+
+<h2>Setup X11</h2>
+<pre><code>cat &gt; /etc/X11/xorg.conf.nv &lt;&lt; EOF
+Section "ServerLayout"
+    Identifier "Layout0"
+    Option "AutoAddDevices" "false"
+    Option "AllowEmptyInput" "False"
+    InputDevice "fake" "CorePointer"
+EndSection
+Section "Device"
+    Identifier "Device1"
+    Driver "nvidia"
+    VendorName "NVIDIA Corporation"
+    BusID "PCI:01:00:0"
+    Option "NoLogo" "true"
+    Option "UseEDID" "false"
+    Option "ConnectedMonitor" "DFP"
+EndSection
+
+Section "InputDevice"
+        Identifier "fake"
+        Driver ""
+EndSection
+EOF
+</code></pre>
+
+<h2>Run Application</h2>
+
+<pre><code>kldload nvidia
+Xorg -config /etc/X11/xorg.conf.nv -sharevts -noreset :8
+/usr/local/VirtualGL/bin/vglrun -ld /usr/local/lib/.nvidia/ -d ":8" winecfg
+kldunload nvidia
+</code></pre>
+
+</div><div id="nvidia-optimus.md" class="text">
+<h1>Official Nvidia Optimus</h1>
+
+<p>this describes how to setup the original nvidia mechanisms for nvidia optimus chips on gentoo.</p>
+
+<p><strong>add in /etc/make.conf:</strong></p>
+<pre><code>VIDEO_CARDS="intel nvidia modesetting"
+</code></pre>
+
+<p><strong>depends:</strong></p>
+
+<pre><code>nvidia-drivers &gt;= 304
+xrandr &gt;= 1.4
+xorg-server &gt;= 1.13
+(theese are all available in gentoo stable.)
+</code></pre>
+
+<p><strong>in /etc/xorg.conf:</strong></p>
+<pre><code>Section "ServerLayout"
+    Identifier "layout"
+    Screen 0 "nvidia"
+    Inactive "intel"
+EndSection
+
+Section "Device"
+    Identifier "nvidia"
+    Driver "nvidia"
+    BusID "PCI:1:0:0"
+EndSection
+
+Section "Screen"
+    Identifier "nvidia"
+    Device "nvidia"
+    Option "UseDisplayDevice" "none"
+EndSection
+
+Section "Device"
+    Identifier "intel"
+    Driver "modesetting"
+EndSection
+
+Section "Screen"
+    Identifier "intel"
+    Device "intel"
+EndSection
+</code></pre>
+
+<p><strong>in ~/.xinitrc:</strong></p>
+<pre><code>xrandr --setprovideroutputsource modesetting NVIDIA-0
+xrandr --auto
+</code></pre>
+
+</div><div id="pulseaudio-network-sink.md" class="text">
+<h1>Pulse Audio Network Sink</h1>
+
+<ul>
+    <li>Hardware: OrangePi Zero</li>
+    <li>Distribution: <a href="https://www.armbian.com/orange-pi-zero/">armbian</a></li>
+</ul>
+
+<h2>Software</h2>
+
+<pre><code>apt-get update
+apt-get install libasound2 libasound2-plugins alsa-utils alsa-oss \
+    pulseaudio pulseaudio-utils avahi-daemon pulseaudio-module-zeroconf
+</code></pre>
+
+<p>Modify <code>/boot/armbianEnv.txt</code> to enable the analog output of the orange-pi:</p>
+
+<pre><code>overlays=analog-codec
+</code></pre>
+
+<p>In <code>/etc/rc.local</code> add a few lines to setup volumes and autostart pulseaudio:</p>
+
+<pre><code>/usr/bin/pulseaudio
+/usr/bin/amixer sset "Line Out" 100%
+/usr/bin/amixer sset "DAC" 100%
+</code></pre>
+
+<p>Modify <code>/etc/pulse/daemon.conf</code> to adjust pulseaudio's default settings:</p>
+
+<pre><code>daemonize = yes
+allow-module-loading = yes
+allow-exit = no
+system-instance = yes
+</code></pre>
+
+<p>In <code>/etc/pulse/system.pa</code> add the required modules:</p>
+
+<pre><code>load-module module-native-protocol-tcp auth-anonymous=1
+load-module module-zeroconf-discover
+load-module module-zeroconf-publish
+</code></pre>
+
+<p>Disable IPv6 in <code>/etc/sysctl.conf</code> to remove duplicates in your sink-list:</p>
+
+<pre><code>net.ipv6.conf.all.disable_ipv6=1
+</code></pre>
+
+<p>Also modify <code>/etc/avahi/avahi-daemon.conf</code> for the same reasons</p>
+
+<pre><code>use-ipv6=no
+</code></pre>
+
+<p>Set the desired hostname in <code>/etc/hostname</code></p>
+
+<h2>Helpful Commands</h2>
+
+<pre><code>pactl list short sinks
+</code></pre>
+
+</div><div id="router.md" class="text">
+<h1>Simple Wireless Router</h1>
+<p>In this article I'll describe, how to manually setup a simple wireless router.
+It will use eth0 as WAN and Wlan as your private network. I was using the pandaboard for this project with gentoo linux as the distribution.</p>
+
+<h2>Setup of the Wireless Accesspoint</h2>
+<p>We need hostapd to create a reliable WPA2 secured Accesspoint.</p>
+
+<pre><code>emerge -av hostapd
+</code></pre>
+
+<p>Here is my current /etc/hostapd/hostapd.conf:</p>
+
+<pre><code>interface=wlan0
+driver=nl80211
+ssid=YOUR_ESSID_GOES_HERE
+channel=YOUR_CHANNEL
+ignore_broadcast_ssid=0
+country_code=DE
+ieee80211d=1
+hw_mode=g
+ieee80211n=1
+beacon_int=100
+dtim_period=2
+macaddr_acl=0
+max_num_sta=255
+rts_threshold=2347
+fragm_threshold=2346
+logger_syslog=-1
+logger_syslog_level=2
+logger_stdout=-1
+logger_stdout_level=2
+dump_file=/tmp/hostapd.dump
+ctrl_interface=/var/run/hostapd
+ctrl_interface_group=0
+auth_algs=3
+wmm_enabled=1
+wpa=2
+rsn_preauth=1
+rsn_preauth_interfaces=wlan0
+wpa_key_mgmt=WPA-PSK
+rsn_pairwise=CCMP
+wpa_group_rekey=600
+wpa_ptk_rekey=600
+wpa_gmk_rekey=86400
+wpa_passphrase=YOURPASSWORD
+</code></pre>
+
+<h2>DHCP</h2>
+
+<p>This is a N-Wlan-Only Config. Now the WLAN Accesspoint should be set up.
+Due usability, you may want a DHCP server, in that case, i've installed
+dnsmasq:</p>
+
+<pre><code>emerge -av dnsmasq
+</code></pre>
+
+<p>This is my dnsmasq config:</p>
+
+<pre><code># DHCP-Server aktiv für Interface
+interface=wlan0
+
+# DHCP-Server nicht aktiv für Interface
+no-dhcp-interface=eth0
+
+# IP-Adressbereich / Lease-Time
+dhcp-range=interface:wlan0,10.4.4.2,10.4.4.200,infinite
+
+# static ips
+#dhcp-host=&lt;MAC-Adresse&gt;,&lt;Name&gt;,&lt;IP-Adresse&gt;,infinite
+#dhcp-host=f1:f1:f1:f1:f1:f1,,10.4.4.2,infinite
+</code></pre>
+
+<h2>Routing</h2>
+
+<p>In order to NAT the eth0 through wlan, do the following with iptables:</p>
+
+<pre><code>iptables -F
+iptables -t nat -F
+iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+
+sysctl -w net.ipv4.ip_forward=1
+sysctl -p
+</code></pre>
+
+</div><div id="snapcast.md" class="text">
+<h1>snapcast</h1>
+
+<h2>laptop</h2>
+
+<pre><code>apt-get install pulseaudio-module-raop paprefs
+</code></pre>
+
+<h2>mpd</h2>
+
+<pre><code>audio_output {
+    type            "fifo"
+    name            "Snapcast"
+    path            "/tmp/snapfifo"
+    format          "48000:16:2"
+    mixer_type      "software"
+}
+
+systemctl restart mpd
+systemctl enable mpd
+</code></pre>
+
+<h2>shairport-sync</h2>
+
+<pre><code>apt-get install shairport-sync avahi-daemon
+
+vim /etc/shairport-sync.conf
+general = {
+  name = "Full House";
+  output_backend = "pipe";
+  mdns_backend = "avahi";
+};
+
+metadata = {
+  enabled = "yes";
+  include_cover_art = "yes";
+  pipe_name = "/tmp/shairport-sync-metadata";
+}
+
+sessioncontrol = {
+  allow_session_interruption = "yes";
+  session_timeout = 20;
+}
+
+pipe = {
+  name = "/tmp/snapfifo";
+  audio_backend_buffer_desired_length = 48000;
+}
+
+systemctl restart shairport-sync
+systemctl enable shairport-sync
+</code></pre>
+
+<h2>snapclient</h2>
+
+<pre><code>wget https://github.com/badaix/snapcast/releases/download/v0.12.0/snapclient_0.12.0_armhf.deb
+dpkg -i snapclient_0.12.0_armhf.deb
+</code></pre>
+
+<p>/etc/default/snapclient:</p>
+
+<pre><code># defaults file for snapclient
+
+# start snapclient automatically?
+START_SNAPCLIENT=true
+
+# Allowed options:
+#   --help                          produce help message
+#   -v, --version                   show version number
+#   -h, --host arg                  server hostname or ip address
+#   -p, --port arg (=1704)          server port
+#   -l, --list                      list pcm devices
+#   -s, --soundcard arg (=default)  index or name of the soundcard
+#   -d, --daemon [=arg(=-3)]        daemonize, optional process priority [-20..19]
+#   --user arg                      the user[:group] to run snapclient as when daemonized
+#   --latency arg (=0)              latency of the soundcard
+#   -i, --instance arg (=1)         instance id
+
+USER_OPTS="--user eric:audio"
+
+SNAPCLIENT_OPTS="-h server"
+</code></pre>
+
+<p>enable everything:</p>
+
+<pre><code>systemctl restart snapclient
+systemctl enable snapclient
+</code></pre>
+
+</div><div id="trinity-core.md" class="text">
+<h1>Install Trinity Core on Debian/Ubuntu</h1>
+
+<h2>Other Guides</h2>
+<p>- <a href="http://collab.kpsn.org/display/tc/How-to_Linux">How-to<em>Linux</a>
+- <a href="http://collab.kpsn.org/display/tc/How-to_First_step_into_Trinity_Core">How-to</em>First<em>step</em>into<em>Trinity</em>Core</a></p>
+
+<h2>Sources</h2>
+
+<ul>
+    <li><a href="git://github.com/TrinityCore/TrinityCore.git">server</a> </li>
+    <li><a href="http://www.trinitycore.org/f/files/download/5-tdb-full-updates/">database</a></li>
+</ul>
+
+<h2>Install dependencies</h2>
+
+<pre><code>sudo apt-get install build-essential autoconf libtool gcc g++ make cmake git-core patch wget links zip unzip unrar
+sudo apt-get install openssl libssl-dev libmysqlclient15-dev libmysql++-dev libreadline6-dev zlib1g-dev libbz2-dev libncurses5-dev libace-dev
+</code></pre>
+
+<h2>Build the Server</h2>
+
+<pre><code>git clone git://github.com/TrinityCore/TrinityCore.git 
+mkdir TrinityCore/build
+cd TrinityCore/build
+cmake ../ -DSERVERS=1 -DTOOLS=1 -DPREFIX=/home/trinity/server -DSCRIPTS=1
+make -j5
+make install
+</code></pre>
+
+<h2>Build Library for Map extraction</h2>
+
+<pre><code>sudo apt-get install automake1.10
+cd ~/TrinityCore/dep/libmpq/
+sh ./autogen.sh
+./configure
+make
+sudo make install
+</code></pre>
+
+<h2>Map Generation</h2>
+
+<pre><code>cd &lt;your WoW client directory&gt;
+mkdir vmaps mmaps
+/home/&lt;username&gt;/server/bin/mapextractor
+/home/&lt;username&gt;/server/bin/vmap4extractor
+/home/&lt;username&gt;/server/bin/vmap4assembler Buildings vmaps
+cp Buildings/* ./vmaps
+/home/&lt;username&gt;/server/bin/mmaps_generator
+cp dbc maps mmaps vmaps /home/&lt;username&gt;/server/data
+</code></pre>
+
+<h2>Database</h2>
+
+<pre><code>mysql -u root -p &lt; ./TrinityCore/sql/create/create_mysql.sql
+mysql -u root -p auth &lt; ./TrinityCore/sql/base/auth_database.sql 
+mysql -u root -p characters &lt; ./TrinityCore/sql/base/characters_database.sql
+
+mysql -u root -p world &lt; ./path/to/your/tdb.sql
+cd ./TrinityCore/sql/updates/world
+for i in *; do mysql -u trinity --password=trinity world &lt; $i; done
+</code></pre>
+
+<h2>Configure</h2>
+
+<pre><code>cp worldserver.conf.dist worldserver.conf
+cp authserver.conf.dist authserver.conf
+</code></pre>
+
+<p><strong>worldserver.conf:</strong></p>
+
+<pre><code>LoginDatabaseInfo = "127.0.0.1;3306;trinity;trinity;auth"
+WorldDatabaseInfo = "127.0.0.1;3306;trinity;trinity;world"
+CharacterDatabaseInfo = "127.0.0.1;3306;trinity;trinity;characters"
+
+vmap.enableLOS = 1
+vmap.enableHeight = 1
+vmap.petLOS = 1
+vmap.enableIndoorCheck = 1
+mmap.enablePathFinding = 0
+</code></pre>
+
+<p><strong>authserver.conf:</strong></p>
+
+<pre><code>LoginDatabaseInfo = "127.0.0.1;3306;trinity;trinity;auth"
+</code></pre>
+
+<h2>Start Server</h2>
+<pre><code>cd ./server/data
+../bin/authserver
+../bin/worldserver
+</code></pre>
+
+<h2>Add Accounts</h2>
+<pre><code>account create &lt;user&gt; &lt;pass&gt;
+account set gmlevel &lt;user&gt; 3 -1
+</code></pre>
+
+<h2>GM Commands</h2>
+<p>check quests:</p>
+<pre><code>.lookup quest &lt;questname&gt;
+.quest complete &lt;questid&gt;
+</code></pre>
+
+</div><div id="ubuntu-inside-freebsd-jail.md" class="text">
+<h1>Ubuntu inside FreeBSD Jail</h1>
+
+<h2>Prepare for linux compatible jails</h2>
+
+<pre><code>kldload fdescfs linprocfs linsysfs tmpfs
+
+echo 'linux_enable="YES"' &gt;&gt; /etc/rc.conf
+echo 'compat.linux.osrelease=2.6.18' &gt;&gt; /etc/sysctl.conf
+sysctl compat.linux.osrelease=2.6.32
+
+echo 'jail_enable="YES"' &gt;&gt; /etc/rc.conf
+echo 'jail_conf="/home/eric/jails/etc/jail.conf"' &gt;&gt; /etc/rc.conf
+echo 'jail_list="ubuntu"' &gt;&gt; /etc/rc.conf
+</code></pre>
+
+<h2>Setup the jail</h2>
+
+<pre><code>mkdir -p /home/eric/jails/etc
+
+cat &gt; /home/eric/jails/etc/jail.conf &lt;&lt; EOF
+ubuntu {
+    path = /home/eric/jails/ubuntu;
+    allow.mount;
+    mount.devfs;
+    host.hostname = ubuntu;
+    mount.fstab="/home/eric/jails/etc/fstab.ubuntu";
+    ip4.addr = 127.0.0.10;
+    interface = lo0;
+    exec.start = "/etc/init.d/rc 3";
+    exec.stop = "/etc/init.d/rc 0";
+}
+EOF
+
+cat &gt; /home/eric/jails/etc/fstab.ubuntu &lt;&lt; EOF
+linsys   /home/eric/jails/ubuntu/sys         linsysfs  rw          0 0
+linproc  /home/eric/jails/ubuntu/proc        linprocfs rw          0 0
+#tmpfs    /home/eric/jails/ubuntu/lib/init/rw tmpfs     rw,mode=777 0 0
+EOF
+</code></pre>
+
+
+<h2>Install Ubuntu</h2>
+
+<pre><code>debootstrap --no-check-gpg --arch=i386 trusty /home/eric/jails/ubuntu http://archive.ubuntu.com/ubuntu/
+
+umount /home/eric/jails/ubuntu/proc
+umount /home/eric/jails/ubuntu/dev
+umount /home/eric/jails/ubuntu/sys
+umount /home/eric/jails/ubuntu/lib/init/rw
+
+cat &gt; /home/eric/jails/ubuntu/etc/apt/sources.list &lt;&lt; EOF
+deb http://de.archive.ubuntu.com/ubuntu trusty main universe multiverse restricted
+EOF
+</code></pre>
+
+<h2>Launch the jail</h2>
+
+<pre><code>jail -f /home/eric/jails/etc/jail.conf -c ubuntu
+jls
+jexec 1 /bin/bash
+</code></pre>
+
+
+<h2>Setup Network</h2>
+
+<pre><code>kldload pf
+echo 'pf_enable="YES"' &gt;&gt; /etc/rc.conf
+echo "nat on wlan0 from 127.0.0.10 to any -&gt; (wlan0)" &gt;&gt; /etc/pf.conf
+</code></pre>
+
+</div><div id="urxvt.md" class="text">
+<h1>URxvt</h1>
+<h2>Copy &amp; Paste</h2>
+
+<p>Support for Ctrl-Shift-C and Ctrl-Shift-V in (u)rxvt.
+install: <code>xsel</code> and download the clipboard perl script:</p>
+
+<pre><code>wget https://github.com/muennich/urxvt-perls/raw/master/clipboard -O /usr/lib/urxvt/perl/clipboard 
+</code></pre>
+
+<p>.Xdefaults:</p>
+
+<pre><code>URxvt.perl-ext-common: default,matcher,clipboard
+URxvt.keysym.Shift-Control-C: perl:clipboard:copy
+URxvt.keysym.Shift-Control-V: perl:clipboard:paste
+</code></pre>
+
+<h2>instant color-change</h2>
+<p>Using <code>printf</code> to instantly swithc colors within rxvt-unicode:</p>
+
+<p>change cursor color (blue):</p>
+
+<pre><code>printf '\33]12;12\007'
+</code></pre>
+
+<p>change background color (dark-grey):</p>
+
+<pre><code>printf '\33]11;%s\007' "#333333"
+</code></pre>
+
+<h3>auto-change</h3>
+<p>Automatically switch colors based on the last ran process in <code>zsh</code>.
+<strong>.zshrc:</strong></p>
+
+<pre><code>appearance() {
+    if (( EUID != 0 )); then
+        printf '\33]12;12\007' # blue user cursor
+    else
+        printf '\33]12;9\007' # red root cursor
+    fi
+}
+appearance
+
+su() {
+    [ -n "$1" ]
+        printf '\33]12;8\007' # changes cursor color
+        /bin/su $@
+        appearance
+}
+
+ssh() {
+    [ -n "$1" ]
+        printf '\33]12;10\007' # changes cursor colo
+        /usr/bin/ssh $@
+        appearance
+}
+
+chroot() {
+    [ -n "$1" ]
+        printf '\33]12;13\007' # changes cursor color   
+        /bin/chroot $@
+        appearance
+}
+</code></pre>
+
+<h1>Change window title</h1>
+
+<pre><code>echo -en "\033]0;"$@"\a"
+</code></pre>
+
+
+</div><div id="webserver-linuxmint.md" class="text">
+<h1>Install a Webserver on Linux Mint</h1>
+<p>To install a Lighttpd Webserver with PHP, MySQL(MariaDB) and PHPMyAdmin,
+use one of the following instructions as root.</p>
+
+<h2>Install all at once</h2>
+
+<pre><code>apt-get install lighttpd php5-cgi php5-mysql php5-mcrypt mariadb-server phpmyadmin
+lighty-enable-mod fastcgi 
+lighty-enable-mod fastcgi-php
+php5enmod mcrypt 
+service lighttpd force-reload
+ln -s /usr/share/phpmyadmin/ /var/www
+</code></pre>
+
+<h2>Install step by step</h2>
+<p>lighttpd webserver:</p>
+
+<pre><code>apt-get install lighttpd
+</code></pre>
+
+<p>lighttpd php &amp; mysql bindings:</p>
+
+<pre><code>apt-get install php5-cgi php5-mcrypt php5-mysql
+</code></pre>
+
+<p>enable php:</p>
+
+<pre><code>lighty-enable-mod fastcgi 
+lighty-enable-mod fastcgi-php
+php5enmod mcrypt 
+</code></pre>
+
+<p>start/restart lighttpd:</p>
+
+<pre><code>service lighttpd force-reload
+</code></pre>
+
+<p>mariadb/mysql server + frontend:</p>
+
+<pre><code>apt-get install mariadb-server
+apt-get install phpmyadmin
+</code></pre>
+
+<p>move phpmyadmin to htdocs:</p>
+
+<pre><code>ln -s /usr/share/phpmyadmin/ /var/www
+</code></pre>
+
+</div><div id="windows.md" class="text">
+<h1>Create a bootable Windows7 USB stick under Linux</h1>
+
+<pre><code>depends: ntfs3g
+</code></pre>
+
+<h2>create the partition</h2>
+
+<pre><code>parted /dev/sdX
+mklabel msdos
+mkpart primary ntfs 1 -1
+set 1 boot on
+quit
+
+mkfs.ntfs -f /dev/sdX1
+</code></pre>
+
+<h2>compile and install the bootloader</h2>
+
+<pre><code># download http://ms-sys.sourceforge.net/
+tar xvzf ms-sys-2.*.tar.gz
+cd ms-sys-2.*
+make
+cd bin
+./ms-sys -7 /dev/sdX
+</code></pre>
+
+<h2>copy the files</h2>
+
+<pre><code>mkdir -p /mnt/usb
+mkdir -p /mnt/iso
+
+mount -o loop /path/to/iso /mnt/iso
+mount /dev/sdX1 /mnt/usb
+
+cp -av /mnt/iso* /mnt/usb
+</code></pre>
+
+<h2>finish</h2>
+
+<pre><code>sync
+umount /mnt/usb
+umount /mnt/iso
+</code></pre>
+
+</div><div id="wireguard-cloudflare-ddns.md" class="text">
+<h1>Wireguard with Cloudflare DDNS from Android to OpenWRT</h1>
+<h2>OpenWRT Setup</h2>
+
+<pre><code>opkg update
+opkg install luci-ssl
+reboot
+</code></pre>
+
+<h3>Cloudflare DDNS</h3>
+<h4>SSH</h4>
+
+<pre><code>opkg update
+opkg install ddns-scripts_cloudflare.com-v4
+opkg install ca-certificates
+opkg install luci-app-ddns
+</code></pre>
+
+<h4>LUCI</h4>
+<p>Go to Services -> Dynamic DNS</p>
+
+<pre><code>Name: $SUBDOMAIN
+Click: Add
+DDNS Service Provider: cloudflare.com-v4
+Domain: $SUBDOMAIN@$DOMAIN.$TLD
+Username: $CLOUDFLARE_MAIL
+Password: $GLOBAL_APIKEY
+Use HTTP Secure: [x]
+Path to CA-Certificate: /etc/ssl/certs
+
+Click: Advanced Settings
+
+IP address source [IPv4]: URL
+URL to detect [IPv4]: http://checkip.dyndns.com
+
+Click: Save &amp; Apply
+</code></pre>
+
+<h3>Wireguard</h3>
+<h4>Generate Keys</h4>
+
+<pre><code>wg genkey | tee privkey | wg pubkey &gt; pubkey
+</code></pre>
+
+<h4>SSH</h4>
+
+<pre><code>opkg install luci-app-wireguard
+reboot
+</code></pre>
+
+<h4>LUCI</h4>
+<p>Go to: Network -> Firewall -> Port Forwards</p>
+
+<pre><code>Name: WireGuard
+Protocol: UDP
+External Zone: WAN
+External Port: 4040
+Internal Zone: LAN
+Internal IP Address: 10.4.4.1
+Internal Port: 4040
+</code></pre>
+
+<p>Go to: Network -> Firewall -> Traffic Rules</p>
+
+<pre><code>Open ports on router
+Name: WireGuard
+Protocol: UDP
+External Port: 4040
+</code></pre>
+
+<p>Network -> Interfaces -> Add new interface</p>
+
+<pre><code>Name: wg0
+Protocol: WireGuard VPN
+Private Key: $ROUTER_PRIVATE
+Firewall Settings: LAN
+Listen Port: 4040
+IP Addresses: 10.10.0.0/16
+
+Click: Add Peer
+
+Public Key: $MOBILE_PUBLIC
+Allowed IPs: 10.10.0.5/32
+Route Allowed IPs: [x]
+Persistent Keep Alive: 25
+</code></pre>
+
+<p>System -> Reboot</p>
+
+<h2>Provider Modem: O2 Connect Box</h2>
+<p>Heimnetzwerk -> Port Forwarding</p>
+
+<pre><code>Port Forwarding aktivieren: [x]
+Click: Regel Hinzufügen
+
+Computer: 192.168.1.2
+1. Portbereich: 4040 - 4040
+Protokoll: UDP
+Click: Speichern
+</code></pre>
+
+<h2>Android Phone</h2>
+<p>Install and open the Wireguard App. Click "(+)" and select "Create from scratch".</p>
+
+<pre><code>Name: $WIREGUARD_NAME
+Private Key: $MOBILE_PRIVATE
+Addresses: 10.10.0.5/32
+DNS Servers: 10.4.4.1
+
+Click: Add Peer
+
+Public Key: $ROUTER_PUBLIC
+Allowed IPs: 0.0.0.0/0,::0
+
+Endpoint: $PUBLIC_IP/$PORT
+Persistent Keep Alive: 25
+</code></pre>
+
+</div><div id="wow-realmzones.md" class="text">
+<h1>A Journey into Realmzones on Vanilla World of Warcraft</h1>
+
+<p>A world of warcraft gameclient that connects to a valid realmserver, receives a list of all available realms, aswell as a realmzone field, containing information about the language/region of each realm. In Burning Crusade and later, this list was unified across all gameclients and became simply a numbered list of countries and languages that a realm can refer to. This list is what is documented on mangos docs, wowdev and several other sources. In addition, the source code of several implementations of <code>realmd</code>, which serves as an opensource implementation of a realmserver, does also always refer to the new enumeration.</p>
+
+<p>But different to what is mentioned there, the vanilla 1.12.1 gameclient handles the values quite a bit different. First of all, there is no unified list, that describes the languages. But Instead, there are 7 different client builds existing. Those are: 1-US, 2-Korea, 3-Europe, 4-Taiwan, 5-China, 99-Test and 101-QA. Each of these clients handles the value that are set as realmzone differently. The clients only know a certain amount of realmzones and every zone that is unknown, will not be displayed in the client at all.</p>
+
+<h2>1. US Builds (enUS)</h2>
+
+<ul>
+    <li><code>1</code>: <code>United States</code></li>
+    <li><code>5</code>: <code>Oceanic</code></li>
+</ul>
+
+<h2>2. Korean Builds (koKR)</h2>
+
+<ul>
+    <li><code>1</code>: <code>Korea</code></li>
+</ul>
+
+<h2>3. European Builds (enGB, deDE, frFR, esES)</h2>
+
+<ul>
+    <li><code>1</code>: <code>English</code></li>
+    <li><code>2</code>: <code>German</code></li>
+    <li><code>3</code>: <code>French</code></li>
+    <li><code>5</code>: <code>Spanish</code></li>
+</ul>
+
+<h2>4. Taiwan Builds (zhTW)</h2>
+
+<ul>
+    <li><code>1</code>: <code>Taiwan</code></li>
+</ul>
+
+<h2>5. Chinese Builds (zhCN)</h2>
+
+<ul>
+    <li><code>1</code>: <code>China</code></li>
+    <li><code>2</code>: <code>CN3</code> (?)</li>
+    <li><code>3</code>: <code>CN7</code> (?)</li>
+</ul>
+
+<h2>99. Test Builds (??)</h2>
+
+<ul>
+    <li><code>1</code>: <code>Test Server</code></li>
+    <li><code>5</code>: <code>Oceanic</code></li>
+</ul>
+
+<h2>101. QA Builds (??)</h2>
+
+<ul>
+    <li><code>1</code>: <code>QA Server</code></li>
+</ul>
+
+<p>So if using a realmzone <code>3</code> will result in having the realm only visible in european- and chinese builds of the client. The european versions will display <code>French</code> where the chinese builds will display <code>CN7</code>. Using <code>5</code> the european builds will display <code>Spanish</code> and the US- and test builds will display <code>Oceanic</code> in the client realm info.</p>
+
+<p>As seen above, using the value <code>1</code> does always exist, and refers the most general zone/language of that region. What was also observed during the testing is, that using a <code>0</code> instead of any other number, will always refer to the <code>1</code>. An interesting part is the gap that exists in the enumeration. So for example, the <code>4</code> is missing for the EU clients and <code>2-4</code> are missing for the US builds that were probably introduced as placeholders to split the area even further. Also, the Test-Clients seem to be a modified version as the US clients, according to the supported zone infos.</p>
+
+<p>The information was probed, gathered and verified using the following gameclients: enUS, ruRU, koKR, deDE, frFR, esES, zhTW and zhCN.
+There was no access to an <code>enGB</code> nor to the <code>test</code> and <code>QA</code> clients. However, a file does exist inside the enUS client (and probably others aswell) that filled the gaps in the list and gave insights about the compatible realmzones of those builds.
+The file is called <code>Cfg_Categories.dbc</code> and can be found inside the <code>interface.mpq</code> of the client:</p>
+
+<pre><code>long,long,str,None,None,None,None,None,None,None,flags,
+1,1,"United States",,,,,,,,0x3F007E,
+1,2,"Korea",,,,,,,,0x3F007E,
+1,3,"English",,,,,,,,0x3F007E,
+2,3,"German",,,,,,,,0x3F007E,
+3,3,"French",,,,,,,,0x3F007E,
+1,4,"Taiwan",,,,,,,,0x3F007E,
+1,5,"China",,,,,,,,0x3F007E,
+1,99,"Test Server",,,,,,,,0x3F007E,
+5,1,"Oceanic",,,,,,,,0x3F007E,
+1,101,"QA Server",,,,,,,,0x3F007E,
+5,3,"Spanish",,,,,,,,0x3F007E,
+5,99,"Oceanic",,,,,,,,0x3F007E,
+2,5,"CN3",,,,,,,,0x3F007E,
+3,5,"CN7",,,,,,,,0x3F007E,
+</code></pre>
+
+<p>As a side note, the ruRU is a custom client, that didn't exist back then, but however is quite popular. This client is a modification of the enUS client, and by that falls into the category of the US-builds (so it only accepts <code>1</code> and <code>5</code>).</p>
+
+<p>Here's a quick overview of what the realmzone values will display on each client:</p>
+
+<pre><code>value: 1
+  * deDE: Englisch
+  * enUS: United States
+  * esES: Inglés
+  * frFR: English
+  * koKR: 대한민국
+  * ruRU: Русский
+  * zhCN: 中国
+  * zhTW: 台灣
+
+value: 2
+  * deDE: Deutsch
+  * esES: Alemán
+  * frFR: Deutsch
+  * zhCN: 三区
+
+value: 3
+  * deDE: Französisch
+  * esES: Francés
+  * frFR: Français
+  * zhCN: 七区
+
+value: 5
+  * deDE: Spanisch
+  * enUS: Oceanic
+  * esES: Español
+  * frFR: Español
+  * ruRU: Океания
+</code></pre>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

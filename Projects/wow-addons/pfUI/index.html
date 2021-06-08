@@ -1,0 +1,162 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../../">welcome!</a> » <a href="../../">Projects</a> » <a href="../">wow-addons</a> » <span>pfUI</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="README.md" class="text">
+<h1>pfUI</h1>
+
+<p><strong>This AddOn is no longer under active development. Bugfixes will still be made and pull-requests will be processed. However, feature-requests will no longer being worked on.</strong></p>
+
+<p>An AddOn for World of Warcraft: Vanilla (1.12.1) and The Burning Crusade (2.4.3), which aims to be a full replacement for the original interface. The design is inspired by several screenshots I've seen from TukUI, ElvUI and others. This addon delivers modern features and a minimalistic style that's easy to use right from the start. It is entirely written from scratch without any inclusion of third-party addons or libraries.</p>
+
+<p>This is <strong>not</strong> an addon-pack like <a href="http://shagu.org/ShaguUI/">ShaguUI</a>, however, there is support for external addons like MobHealth3, DPSMate and others, but they will never be shipped within the package.</p>
+
+<p><strong>Please do not re-upload or distribute outdated versions of this project. However, you are more than welcome to fork or link to the official github page.</strong></p>
+
+<h2>Screenshots</h2>
+
+<p><img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/config.jpg" align="right" width="48.8%">
+<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/unlock.jpg" width="48.8%">
+<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/contrib.jpg" align="right" width="48.8%">
+<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI/maraudon.jpg" width="48.8%"></p>
+
+<h2>Installation (Vanilla)</h2>
+<p>1. Download <strong><a href="https://github.com/shagu/pfUI/archive/master.zip">Latest Version</a></strong>
+2. Unpack the Zip file
+3. Rename the folder "pfUI-master" to "pfUI"
+4. Copy "pfUI" into Wow-Directory\Interface\AddOns
+5. Restart Wow</p>
+
+<h2>Installation (The Burning Crusade)</h2>
+<p>1. Download <strong><a href="https://github.com/shagu/pfUI/archive/master.zip">Latest Version</a></strong>
+2. Unpack the Zip file
+3. Rename the folder "pfUI-master" to "pfUI-tbc"
+4. Copy "pfUI-tbc" into Wow-Directory\Interface\AddOns
+5. Restart Wow</p>
+
+<h2>Commands</h2>
+
+<pre><code>/pfui         Open the configuration GUI
+/share        Open the configuration import/export dialog
+/gm           Open the ticket Dialog
+/rl           Reload the whole UI
+/farm         Toggles the Farm-Mode
+/pfcast       Same as /cast but for mouseover units
+/focus        Creates a Focus-Frame for the current target
+/castfocus    Same as /cast but for focus frame
+/clearfocus   Clears the Focus-Frame
+/swapfocus    Toggle Focus and Target-Frame
+/abp          Addon Button Panel
+</code></pre>
+
+<h2>Languages</h2>
+<p>pfUI supports and contains language specific code for the following gameclients.
+* English (enUS)
+* Korean (koKR)
+* French (frFR)
+* German (deDE)
+* Chinese (zhCN)
+* Spanish (esES)
+* Russian (ruRU)</p>
+
+<h2>Recommended Addons</h2>
+<p>* <a href="https://shagu.org/pfQuest">pfQuest</a> A simple database and quest helper
+* <a href="http://addons.us.to/addon/wim">WIM</a>, <a href="https://github.com/shirsig/WIM">WIM (continued)</a> Give whispers an instant messenger feel</p>
+
+<h2>Plugins</h2>
+<p>* <a href="https://shagu.org/pfUI-eliteoverlay">pfUI-eliteoverlay</a> Add elite dragons to unitframes
+* <a href="https://shagu.org/pfUI-fonts">pfUI-fonts</a> Additional fonts for pfUI
+* <a href="https://github.com/mrrosh/pfUI-CustomMedia">pfUI-CustomMedia</a> Additional textures for pfUI</p>
+
+<h2>FAQ</h2>
+<p><strong>What does "pfUI" stand for?</strong> <br/>
+The term "<em>pfui!</em>" is german and simply stands for "<em>pooh!</em>", because I'm not a
+big fan of creating configuration UI's, especially not via the Wow-API
+(you might have noticed that in ShaguUI).</p>
+
+<p>~~<strong>Is there a discord channel?</strong>~~ <br/>
+~~Yes there is one: <a href="https://discord.gg/QTRKanu">Discord Invite</a>~~</p>
+
+<p><strong>How can I donate?</strong> <br/>
+You can't. I'm doing this for fun. Enjoy!</p>
+
+<p><strong>How do I report a Bug?</strong> <br/>
+Please provide as much information as possible in the <a href="https://github.com/shagu/pfUI/issues">Bugtracker</a>.
+If there is an error message, provide the full content of it. Just telling that "there is an error" won't help any of us.
+Please consider adding additional information such as: since when did you got the error,
+does it still happen using a clean configuration, what other addons are loaded and which version you're running.
+When playing with a non-english client, the language might be relevant too. If possible, explain how people can reproduce the issue.</p>
+
+<p><strong>How can I contribute?</strong> <br/>
+Report Errors, Issues and Feature Requests in the <a href="https://github.com/shagu/pfUI/issues">Bugtracker</a>.
+Please make sure to have the latest version installed and check for conflicting addons beforehand.</p>
+
+<p><strong>I have bad performance, what can I do?</strong> <br/>
+There's only one known performance issue: that is while using "Frame Shadows". Make sure to disable those
+in the pfUI settings (Settings -> Appearance -> Enable Frame Shadows). If you still have a low performance,
+it's most likely a combination with another addon. Disable all AddOns but pfUI and then enable one-by-one,
+till the performance problem occurs again. Make sure to report the identified AddOn and what you did to reproduce
+via the <a href="https://github.com/shagu/pfUI/issues">Bugtracker</a>.</p>
+
+<p><strong>Where is the happiness indicator for pets?</strong> <br/>
+The pet happiness is shown as the color of your pet's frame. Depending on your skin, this can either be the text or the background color of your pet's healthbar:</p>
+
+<ul>
+    <li>Green = Happy</li>
+    <li>Yellow = Content</li>
+    <li>Red = Unhappy</li>
+</ul>
+
+<p>Since version 4.0.7 there is also an additional icon that can be enabled from the pet unit frame options.</p>
+
+<p><strong>Can I use Clique with pfUI?</strong> <br/>
+This addon already includes support for clickcasting. If you still want to make use of clique, all pfUI's unitframes are already compatible to Clique-TBC. For Vanilla, a pfUI compatible version can be found <a href="https://github.com/shagu/Clique/archive/master.zip">Here</a>. If you want to keep your current version of Clique, you'll have to apply this <a href="https://github.com/shagu/Clique/commit/a5ee56c3f803afbdda07bae9cd330e0d4a75d75a">Patch</a>.</p>
+
+<p><strong>Where is the Experience Bar?</strong> <br/>
+The experience bar shows up on mouseover and whenever you gain experience, next to left chatframe by default. There's also an option to make it stay visible all the time.</p>
+
+<p><strong>How do I show the Damage- and Threatmeter Dock?</strong> <br/>
+If you enabled the "dock"-feature for your external (third-party) meters such as DPSMate or KTM, then you'll be able to toggle between them and the Right Chat by clicking on the ">" symbol on the bottom-right panel.</p>
+
+<p><strong>Why is my chat always resetting to only 3 lines of text?</strong> <br/>
+You need to disable the "Simple Chat" in blizzards interface settings (Advanced Options). Then relog and reset/run the firstrun wizard again.</p>
+
+<p><strong>How can I enable mouseover cast?</strong> <br/>
+On Vanilla, create a macro with "/pfcast SPELLNAME". If you also want to see the cooldown, You might want to add "/run if nil then CastSpellByName("SPELLNAME") end" on top of the macro. For The Burning Crusade, just use the regular mouseover macros.</p>
+
+<p><strong>Will there be pfUI for Activision's "Classic" remakes?</strong> <br/>
+No, it would require an entire rewrite of the AddOn since the game is now a different one. The AddOn-API has evolved during the last 15 years and the new "Classic" versions are based on a current retail gameclient. I don't plan to play any of those new versions, so I won't be porting any of my addons to it.</p>
+
+<p><strong>Everything from scratch?! Are you insane?</strong> <br/>
+Most probably, yes.</p>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

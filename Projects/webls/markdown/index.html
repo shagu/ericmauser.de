@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../../">welcome!</a> » <a href="../../">Projects</a> » <a href="../">webls</a> » <span>markdown</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="README.md" class="text">
+<h1>markdown.lua</h1>
+
+<p><a href="https://travis-ci.org/mpeterv/markdown"><img src="https://travis-ci.org/mpeterv/markdown.png?branch=master" alt="Build Status"/></a>
+<a href="https://coveralls.io/r/mpeterv/markdown?branch=master"><img src="https://coveralls.io/repos/mpeterv/markdown/badge.svg?branch=master" alt="Coverage Status"/></a></p>
+
+<p>This is an implementation of the popular text markup language Markdown in pure Lua.
+Markdown can convert documents written in a simple and easy to read text format
+to well-formatted HTML. For a more thorough description of Markdown and the Markdown
+syntax, see http://daringfireball.net/projects/markdown/.</p>
+
+<p>The original Markdown source is written in Perl and makes heavy use of advanced
+regular expression techniques (such as negative look-ahead, etc) which are not available
+in Lua's simple regex engine. Therefore this Lua port has been rewritten from the ground
+up. It is probably not completely bug free. If you notice any bugs, please report them using
+GitHub issues. A unit test that exposes the error is helpful.</p>
+
+<p><code>markdown.lua</code> has been written by Niklas Frykholm (<a href="http://www.frykholm.se/files/markdown.lua">original</a>).
+This version has been updated to run under Lua 5.2 and Lua 5.3 in addition to Lua 5.1.</p>
+
+<h2>Usage</h2>
+
+<p>```lua
+local markdown = require "markdown"
+markdown(source)
+```</p>
+
+<p><code>markdown</code> module returns a single function which applies the Markdown transformation to the
+specified string. For compatibility it is also set as a global.</p>
+
+<p><code>markdown.lua</code> can also be used directly from the command line:</p>
+
+<p>```
+lua markdown.lua test.md
+```</p>
+
+<p>Creates a file <code>test.html</code> with the converted content of <code>test.md</code>. Run:</p>
+
+<p>```
+lua markdown.lua -h
+```</p>
+
+<p>For a description of the command-line options.</p>
+
+<h2>Installation</h2>
+
+<p>Simply copy <code>markdown.lua</code> into your directory for Lua libraries. Alternatively,
+use <a href="https://luarocks.org/">LuaRocks</a> and run <code>[sudo] luarocks install markdown</code>.</p>
+
+<h2>Miscellaneous</h2>
+
+<p><code>markdown.lua</code> uses the same license as Lua, the MIT license.</p>
+
+<p>An alternative Markdown implementation is <a href="http://asbradbury.org/projects/lua-discount/">lua-discount</a>.
+It is faster than <code>markdown.lua</code>, at the cost of being written in C.</p>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

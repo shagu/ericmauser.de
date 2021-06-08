@@ -1,0 +1,92 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../">welcome!</a> » <a href="../">Hardware</a> » <span>Pandaboard</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="pandaboard.md" class="text">
+<h1>Pandaboard</h1>
+
+<h2>About</h2>
+
+<pre><code>Processor:  Cortex-A9 DualCore Processor @1Ghz.
+Layout:     OMAP4430-SoC
+RAM:        1GB
+wikipedia:  https://de.wikipedia.org/wiki/PandaBoard
+</code></pre>
+
+<h2>Links</h2>
+
+<ul>
+    <li><a href="http://elinux.org/PandaBoard">eLinux</a></li>
+    <li><a href="http://dev.gentoo.org/~armin76/arm/pandaboard/install.xml">Gentoo Guide</a></li>
+</ul>
+
+<h2>UBoot</h2>
+
+<pre><code>wget ftp://ftp.denx.de/pub/u-boot/u-boot-latest.tar.bz2 
+tar xjpf u-boot-latest.tar.bz2 &amp;&amp; cd u-boot-*
+make ARCH=arm CROSS_COMPILE=armv7a-hardfloat-linux-gnueabi- omap4_panda_config
+make ARCH=arm CROSS_COMPILE=armv7a-hardfloat-linux-gnueabi-
+</code></pre>
+
+<h2>Kernel</h2>
+
+<pre><code>make ARCH=arm CROSS_COMPILE=armv7a-hardfloat-linux-gnueabi- omap2plus_defconfig
+make ARCH=arm CROSS_COMPILE=armv7a-hardfloat-linux-gnueabi- uImage
+</code></pre>
+
+<h2>Partitioning</h2>
+
+<pre><code>mmcblk0p1:
+  type: vfat
+  flags: boot
+
+mmcblk0p2:
+  type: ext4
+  flags: -
+</code></pre>
+
+<h2>Flashing</h2>
+
+<pre><code>cp u-boot-*/MLO /mnt/mmcblk0p1
+cp u-boot-*/u-boot.img /mnt/mmcblk0p1
+cp kernel/arch/arm/boot/uImage /mnt/mmcblk0p1
+</code></pre>
+
+<h2>Gentoo</h2>
+
+<h3>Toolchain</h3>
+
+<pre><code>emerge -av crossdev
+crossdev -S armv7a-hardfloat-linux-gnueabi
+</code></pre>
+
+</div><div class="gallery"><a href="20090115_008.jpg"><img src="20090115_008.jpg"/><span>20090115_008</span></a></div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

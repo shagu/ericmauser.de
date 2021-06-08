@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../">welcome!</a> » <a href="../">Hardware</a> » <span>Oculus Quest</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="oculus-quest.md" class="text">
+<h1>Oculus Quest 128G</h1>
+
+<h2>About</h2>
+<p>The Oculus Quest is a standalone, android-based VR Headset created by Oculus VR (Facebook). The battery lasts around 2-4 hours, depending on the load.</p>
+
+<pre><code>Linux Kernel: 4.4.21
+Storage:      128 GB
+Memory:       4 GB
+CPU:          4 Kryo 280 Gold (ARM Cortex-A73 based) @ 2.45 GHz
+              4 Kryo 280 Silver (ARM Cortex-A73 based) @ 1.9 GHz
+
+GPU:          Adreno 540
+
+CPU-Info:     4x Processor  : AArch64 Processor rev 4 (aarch64)
+              BogoMIPS  : 38.40
+              Features  : fp asimd evtstrm aes pmull sha1 sha2 crc32
+              CPU implementer   : 0x51
+              CPU architecture: 8
+              CPU variant   : 0xa
+              CPU part  : 0x801
+              CPU revision  : 4
+
+              Hardware  : Qualcomm Technologies, Inc APQ8998
+</code></pre>
+
+<h2>Developer Mode</h2>
+<p>Since the device is android based, you can load any APK onto the device. First you need to sign up for a "developer account".
+You can type in anything you want here, there won't be any further checks.
+Visit: <a href="https://dashboard.oculus.com/organizations/create/">Oculus Dashboard</a></p>
+
+<p>Once you created an "organization", you will be able to enable the development mode via the paired mobile app.</p>
+
+<p>Plug in the Oculus Device into the PC and launch "adb shell". Within the headset, a popup will show up, asking you to confirm the connection.
+Voila, your headset is paired and you can use <code>adb shell</code> to browse the device or <code>adb install</code> to install any app you like.</p>
+
+<p>Most non-VR-ready apps won't show up in the regular place, you will either need to get a special launcher or launch them via the "Oculus TV" app.
+The tool "SideQuest" provides an own launcher that can be found in the "Apps" section, simply called: "SideQuest Launcher".</p>
+
+<p>As an alternative, you can check out the unity based launcher named <a href="https://github.com/tverona1/QuestAppLauncher">QuestAppLauncher</a>.
+The release page provides APKs, that can be simply installed via ADB, without the need of SideQuest or any other tools.</p>
+
+<h2>Custom Beatsaber Songs</h2>
+<p>In order to make use of user made songs, you will need to install <a href="https://github.com/kihecido/BMBF">BMBF</a> which basically uninstalls Beatsaber, extracts the APK, patches it and bundles it up again.</p>
+
+<p>Visit their <a href="https://github.com/kihecido/BMBF/releases/tag/v1.4.5">GitHub Release Page</a> and grab the latest APKs. I downloaded both and installed them via ADB:</p>
+
+<pre><code>adb install BMBF_TVWrapper.1.apk
+adb install com.weloveoculus.BMBF.apk
+</code></pre>
+
+<p>Once both are installed, launch the BMBF App. This will guide you through the installation process and at the end, do not launch Beat Saber directly. Instead click on the 3 dots (...) on the BeatSaber App in the library, and enable the storage permissions. You can now run Beatsaber as usual, or if you want to add new tracks, just launch the BMBF. This will allow you transfer songs to the device via an open port. The IP address and the port of it, can be found in the "Tools" tab of BMBF. Open it in your browser and drag the songs you like into it. A good source for user made custom songs is: <a href="https://bsaber.com/">Beast Saber</a>.</p>
+
+<h2>Termux</h2>
+<p>To install and use termux, you will need to fetch the APK from any mirror site like <a href="https://apkpure.com/termux/com.termux">Apkpure</a>, <a href="https://www.apkmirror.com/apk/fredrik-fornwall/termux/">APKMirror</a> or directly from <a href="https://f-droid.org/en/packages/com.termux/">F-Droid</a>. Install the APK onto the device by typing: <code>adb install com.termux_84.apk</code>. Since the app was not specifically made for the oculus, it won't show up in the app-menu. But, the oculus has an "Oculus TV" app for those apps, that aren't VR-Ready, go there, select "Channels" and open the Termux app.</p>
+
+<h2>Stream to Display</h2>
+<p>Streaming can only be achieved via an official chromecast device, the Nvidia SHIELD or the official Oculus mobile app.</p>
+
+<h2>Wireless ADB</h2>
+<p>Android allows us to remotly debug the device over the wireless network. First you will need to plug in the cable and start a regular shell session, in order to obtain the IP Address and to enable the tcpip debugging of adb.</p>
+
+<pre><code>adb shell ip route
+10.23.0.0/24 dev wlan0  proto kernel  scope link  src 10.23.0.247
+                                                        ^- device IP
+
+adb tcpip 5555
+adb connect 10.23.0.247:5555
+</code></pre>
+
+<p> You're now connected to the remote device via network and send any adb commands you like. To stop the session, type:</p>
+
+<pre><code>adb disconnect
+</code></pre>
+
+<h2>Stream to Desktop</h2>
+<p>It is possible to stream the raw display of the oculus quest to your PC, by using builtin android tools and <code>ffmpeg</code> on your Desktop. Android has an executable called <code>screenrecord</code>, which is capable of recording the entire screen to the stdout. This allows us to pipe it through <code>adb</code> to our PC, where ffmpeg receives the stream and displays it. This even works on the restricted content like TV and 2D apps.</p>
+
+<pre><code>adb exec-out "while true; do screenrecord --bit-rate=4m --size 1280x720 --time-limit=60 --output-format=h264 -; done" | ffplay -framerate 300 -probesize 32 -sync video -
+</code></pre>
+
+<p>In the command above, I set the framerate incredible high on purpose. This is to make sure that none of the buffers on the <code>ffplay</code>-side will fill up and start causing a lag, that is getting worse and worse. Having such a high framerate combined with the low probe size and the sync option, will cause ffplay to instantly play every received frame and ignoring everyhting else it didn't get.
+Here's alot more room for improvements, but for now, this one gave me the best results.</p>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

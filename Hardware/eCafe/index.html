@@ -1,0 +1,273 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../">welcome!</a> » <a href="../">Hardware</a> » <span>eCafe</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="ecafe.md" class="text">
+<h1>Hercules eCafe</h1>
+<h2>About</h2>
+<p>The eCafé is a ARM-Cortex-A8 based netbook manufactured by Hercules. It's a Freescale CPU from the i.MX51 Series.
+By default it comes with an ubuntu netbook desktop which is modified by hercules and supplemented by some tools like the eCafe Webcam viewer.
+The package repositories are hosted by Hercules. It has a resolution of 1024x600 and the battery runs at least for over 20 hours with my default vim-usage.
+Personally, i'm not a ubuntu-fan, so one of the first things i did, was to try to get a working arch/gentoo on that great thing.</p>
+
+<pre><code>Processor:  ARMv7 800 Mhz
+Hardware:   Hercules MX51 eCAFE
+Board:      IMX51
+Resolution: 1024x600
+Graphic:    IMX51
+Backlight:  255 Steps
+Battery:    For me, more than 20 Hours
+Storage:
+- 8 GB iNAND (eMMC)
+- 1 internal MMC Card Slot
+- 1 external MMC Card Slot
+</code></pre>
+
+<h2>Preparation</h2>
+
+<p>First of all, we need to fetch all the sources. These are the following:</p>
+
+<ol>
+    <li><a href="http://package.ecafe.hercules.com/Sources/">Cross Compile Toolchain (gcc-4.4.4-glibc-2.11.1-multilib-1.0-1.i386.rpm)</a></li>
+    <li><a href="http://package.ecafe.hercules.com/Sources/">Kernel Sources (linux-2.6.35.4-ecafe-v4C_src.tar.gz)</a></li>
+    <li><a href="http://package.ecafe.hercules.com/Sources/">SDK-Documentation (Hercules%20eCAFE-SlimEX-HD-SDK_V1.0.pdf)</a></li>
+    <li><a href="http://ecafe.hercules.com/us/download-and-services/">System Restore SD-Image (at the bottom of the page)</a></li>
+</ol>
+
+<p>On the System Restore SD Image is a tarball of the ubuntu installation. Extract it to a directory you want, on the Host of course. 
+Because later, we will need some firmware and blobs of it.</p>
+
+<h3>Building the install environment</h3>
+<p>As we need something to install our later described rootfs-images, we start installing the System Restore SD Image. Plug a free SD Card into your Cardreader of your host system.
+unpack the Image and DD it to your SD</p>
+
+<pre><code>dd if=/path/to/your/restore-image of=/dev/mmcblk0 bs=4M
+</code></pre>
+
+<p>try to mount it, and create a directory in the root called /stages. We will need this one, to copy our root images to it.</p>
+
+
+<h2>Kernel</h2>
+<p>In fact that we may need additional kernel modules like a device encryption (dm-crypt, xts, aes, ...) and some additional filesystems we should build an own kernel. 
+In the eCafe SDK Documentation, it's perfectly described how to do that. But there is a point where i don't agree. Since the SDK seems to be outdated, they write about to use the Kernel with the ending -v2<em>src. 
+Maybe it will work for you with v2</em>src greatly. But I was not able to get the audio working with the v2<em>src. v4C</em>src instead brings a specific ecafe alsa module which works great. 
+So if you want a running system without driver problems, I recommend the v4C_src kernel sources.</p>
+
+<h3>Toolchain</h3>
+<p>Now we need to install the toolchain, we've downloaded previously. Since the Toolchain comes as .rpm, we need to convert it to a file we can easily unpack. 
+For me as a gentoo user, <code>rpm2targz</code> did the trick. After conversion, we just unpack the toolchain to /.</p>
+
+<pre><code>tar xfvz /path/to/toolchain.tar.gz -C /
+</code></pre>
+
+<p>now unpack the kernel sources too.</p>
+
+<pre><code>tar xfvz /path/to/kernel/sources.tar.gz
+</code></pre>
+
+<h3>Building the kernel</h3>
+<p>We now enter the kernel directory and set the following Environment variables:</p>
+
+<pre><code>export ARCH=arm 
+export CROSS_COMPILE=/opt/freescale/usr/local/gcc-4.4.4-glibc-2.11.1-mulitlib-1.0/arm-fsl-Linux-gnueeabi/bin//arm-fsl-Linux-gnueabi-
+export INSTALL_MOD_PATH=./
+</code></pre>
+
+<p>to get a working ecafe config, just type:</p>
+
+<pre><code>make ecafe_defconfig
+</code></pre>
+
+<p>With the fundament of this defconfig, we can add the stuff we need and removed some "trash" like the built-in ntfs support and such.</p>
+
+<p>NOTE: since most operating systems switched to devtmpfs which is maintained by the kernel,
+we have to activate it in the kernel.
+I Found it in <code>Device Drivers -&gt; Generic Driver Options</code>:</p>
+
+<pre><code>[*] Maintain a devtmpfs filesystem to mount at /dev
+[*]   Automount devtmpfs at /dev, after the kernel mounted the rootfs
+</code></pre>
+
+<p>to configure type:</p>
+
+<pre><code>make menuconfig
+</code></pre>
+
+<p>After we finished our kernel configuration, we do a full build of it. (you may need u-boot-utils)</p>
+
+<pre><code>make uImage
+make modules
+make modules_install
+</code></pre>
+
+<p>now we copiy the files (uImage + modules) to the restore-SD (in my case /stages/kernel). 
+You can locate the uImage in ./arch/arm/boot/.</p>
+
+<h4>Installation</h4>
+<p>To install the kernel, boot the rescue system, and DD the Kernel Image to /dev/mmcblk0 (which is the NAND) and the modules to your rootfs /lib. 
+You can safely remove the old lib/modules from your previous ubuntu version. If you know, that your kernel will run correctely :)</p>
+
+<pre><code>dd if=uImage of=/dev/mmcblk0 bs=1M seek=1
+</code></pre>
+
+<h2>Linux</h2>
+
+<h3>Debian</h3>
+<p>For Debian, wen need to install debootstrap on the host (for gentoo users: emerge -av debootstrap).
+Now we run the debootstrap command to checkout the testing. Testing should be the choice because stable doesn't have armhf packages:</p>
+
+<pre><code>debootstrap --foreign --no-check-gpg --arch=armhf testing /debian-ecafe http://ftp.debian.org/debian/
+</code></pre>
+
+<p>This may take a while (about 1-2minutes depends on your internet connection). Tarball it!:)</p>
+
+<pre><code>cd debian-ecafe
+tar cfjp ../debian-rootfs.tar.bz2 .
+</code></pre>
+
+<p>Let bring it to the SD Rescue Image. Copy your tarball to your SD-Rescue Image to the path: /stages.
+Now perform an install as described later. But after you unpacked the rootfs to your NAND, you have to chroot it and run the second stage:</p>
+
+<pre><code>chroot /mnt/rootfs /bin/bash
+/debootstrap/debootstrap --second-stage
+exit
+</code></pre>
+
+<p>This will finish the debian distribution. Now go on as usual.</p>
+
+<h3>Gentoo</h3>
+<p>Gentoo is quite easy if you don't plan to crosscompile with your host. Download the stage3 you want.
+I recommend hardfloated. Copy it to your SD-Rescue to the /stages folder. 
+You can find 'em here: <a href="http://distfiles.gentoo.org/releases/arm/autobuilds/">gentoo autobuids</a></p>
+
+<h3>Archlinux</h3>
+<p>Archlinux is quite easy. Download archlinuxarm's stage3 here: <a href="http://archlinuxarm.org/os/omap/">ArchLinuxARM-2012.06-omap-smp-rootfs.tar.gz</a>
+It took the omap, because its armv7, and as we don't use archlinux's boot mechanisms (uboot/kernel/etc) we don't care in the fact that omap != imx.
+Let's copy it to our SystemRescues SD to path: /stages/</p>
+
+
+<h2>Install via SystemRescue</h2>
+<p>Boot your SystemRescue SD. Now we can install our Linux:</p>
+
+<pre><code>mkfs.ext4 /dev/mmcblk0p1
+mkdir /mnt/rootfs
+mount /dev/mmcblk0p1 /mnt/rootfs
+tar xfjp /stages/&lt;distribution&gt;-rootfs.tar.bz2 -C /mnt/rootfs
+</code></pre>
+
+<p>Install the kernel with:</p>
+
+<pre><code>dd if=/stages/kernel/uImage of=/dev/mmcblk0 bs=1M seek=1
+</code></pre>
+
+<p>and copy the modules:</p>
+
+<pre><code>cp /stages/kernel/lib /mnt/rootfs -Rf
+</code></pre>
+
+<p>finish the installation:</p>
+
+<pre><code>umount /mnt/rootfs
+sync
+</code></pre>
+
+<p>Reboot the eCafe, set the DIP-switch back to internal boot. You should now see your Kernel booting into your rootfs :)</p>
+
+<h2>Troubleshooting</h2>
+<h3>Wireless</h3>
+<p>The Wireless Network device on the eCafé won't be able to come up after a default installation.
+I'd seen a device called ra0 if I typed "ifconfig -a" as root. But when hit "ifconfig ra0 up" to bring it up, it gave me an error like this:</p>
+
+<pre><code>SCSIOFLAGS : Operation not permitted.
+</code></pre>
+
+<p>That's because the correct driver is needed to bring it up. It's not just a Firmware+Kernel thing. I had to use the driver package from ralink for my 2.6.35 Kernel.
+Just Copy the /etc/Wireless folder from the ubuntu-tarball you've extracted previously to your own Installation. Because the ralink driver needs the File in /etc/Wireless to come up correctly.</p>
+
+<h3>Udev</h3>
+<p>Udev makes some problems because, our kernel is quite to old for newer udev versions.
+But theres a patch available, which patches udev to use the old commands to the kernel.</p>
+
+<h4>Archlinux</h4>
+<p>install udev-oxnas, should do the trick. But it can make you crazy on pacman updates.</p>
+
+<h4>Debian</h4>
+<p>build your own udev version, and patch it with <a href="https://github.com/archlinuxarm/PKGBUILDs/blob/01d2c127d2501088cf4f1b971392e6561e2ab11f/core/udev-oxnas/pre-accept4-kernel.patch">pre-accept4-kernel.patch</a>.
+If the link is dead, you have to google for "udev oxnas patch github".</p>
+
+<pre><code>apt-get source udev
+cd udev*/udev
+vim udev-ctrl.c
+# patch it manually, there are only 4 parts :)
+cd ../..
+apt-get -b source udev
+dpkg -i udev_*.deb
+</code></pre>
+
+<h4>Gentoo</h4>
+<p>patch it your own, or mask the new udev versions. The Patch can be found <a href="https://github.com/archlinuxarm/PKGBUILDs/blob/01d2c127d2501088cf4f1b971392e6561e2ab11f/core/udev-oxnas/pre-accept4-kernel.patch">here</a>
+or google for "udev oxnas patch github".</p>
+
+<h3>Accelerated Graphics on the eCafé</h3>
+<p>I have to say that, until now, I do not feel a great difference between fbdev driver and the imx driver.
+But that's maybe because of the fact, that I still do not use the accelerated gstreamer drivers.
+I'm still satisfied with my mplayer sdl output.</p>
+
+<pre><code>mplayer -vo sdl -autosync 30 -framedrop -cache 8192
+</code></pre>
+
+<p>NOTE: I use sdl because xv seems to be buggy in some cases, and sdl let me scale the video.
+On gentoo instead, i wasn't yet able to build the i.MX drivers. On this point, every help is appreciated.
+On Archlinux it's quite easy to install the i.MX51 Accelerated video drivers. I just hit </p>
+
+<pre><code>pacman -S xf86-video-imx
+</code></pre>
+
+<p>in the console. After that, I gave the GL-device some other permissons. To recreate this permissons I've added this line to local.start:</p>
+
+<pre><code>chmod 777 /dev/gsl_kmod
+</code></pre>
+
+<p>In the next step, i downloaded the ubuntu libkgsl-imx package, because there is no archlinux package for this in the repositories.</p>
+
+<pre><code>wget http://packages.efikamx.info/pool/main/i/imx-graphics/libkgsl-imx_1.0.3-20110310_armel.deb
+</code></pre>
+
+<p>Unpacked it, and moved the libkgsl.so.1.0 from ./usr/lib to /usr/lib 
+then i created two symlinks for compatibility with some other packages.</p>
+
+<pre><code>cd /usr/lib
+ln -s libkgsl.so.1.0 libkgsl.so.1
+ln -s libkgsl.so.1.0 libkgsl.so
+</code></pre>
+
+</div><div class="gallery"><a href="20090115_002.jpg"><img src="20090115_002.jpg"/><span>20090115_002</span></a><a href="20090115_003.jpg"><img src="20090115_003.jpg"/><span>20090115_003</span></a></div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

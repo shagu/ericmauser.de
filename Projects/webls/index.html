@@ -1,0 +1,161 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../">welcome!</a> » <a href="../">Projects</a> » <span>webls</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a><a class="sidelink" href="content/">content</a><a class="sidelink" href="markdown/">markdown</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="README.md" class="text">
+<h1>webls</h1>
+<p>This project aims to be a simple and lightweight website generator and an alternative to <code>jekyll</code>, <code>hugo</code> and alike. The project is purely written in lua and will also require lua-filesystem to be installed on your system.</p>
+
+<p>The goal of <code>webls</code> is, to automatically create a hierarchically ordered website, based on the file-structure of the input directory. When <code>webls</code> is executed, it will recursivly scan through the <code>config.content</code> (<a href="config.lua">config.lua</a>) directory and search for all folders, images, archives and markdown files. Those will then be rendered and/or copied to the <code>config.www</code> (<a href="config.lua">config.lua</a>) folder, where as a result, the website is generated.
+Textfiles will be rendered via <a href="https://github.com/mpeterv/markdown.git">lua-markdown</a> into html code and folders are displayed as sidebar entries. Several other modules exist and will generate additional content based on the <code>config.modules</code>(<a href="config.lua">config.lua</a>) you have set.</p>
+
+<p>An example page can be found here: <a href="https://shagu.github.io/webls">webls-demo</a> that is using the data found in <a href="https://github.com/shagu/webls/tree/master/content">content</a>.</p>
+
+
+<h2>Getting Started</h2>
+
+<h3>GitHub (Travis)</h3>
+
+<ol>
+    <li><p>Create a new repository</p></li>
+    <li><p>Create an empty <code>./content</code> folder</p></li>
+    <li><p>Drop the desired files and folders into <code>./content</code></p></li>
+    <li><p><a href="https://help.github.com/en/github/authenticating-to-github/creating-a-personal-access-token-for-the-command-line">Generate an access token</a> for Travis</p></li>
+    <li><p>Enable <a href="https://travis-ci.org">Travis-CI</a> for your new repository</p></li>
+    <li><p>Open the travis repository settings, and add a new variable.</p>
+
+<pre><code>Name: GITHUB_TOKEN
+Value: «Your token»
+</code></pre></li>
+    <li><p>Add and commit a <a href=".travis.yml">.travis.yml</a> file to your repository:</p>
+
+<pre><code>language: generic
+
+addons:
+  apt:
+    update: true
+    packages:
+      - lua5.2
+      - lua-filesystem
+
+script:
+  - git clone --recursive https://github.com/shagu/webls.git .webls
+  - cp -f .webls-config.lua .webls/config.lua || true
+  - rm -r .webls/content
+  - cp -r content .webls/content
+  - ( cd .webls &amp;&amp; ./webls.lua )
+  - mv .webls/www public
+
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GITHUB_TOKEN
+  local-dir: public
+</code></pre></li>
+</ol>
+
+<p>Travis should now start automatically and prepare your website. The page should now become available under: <strong>https://«yourname».github.io/«repoistory»</strong>.</p>
+
+<h3>GitLab</h3>
+
+<ol>
+    <li><p>Create a new repository</p></li>
+    <li><p>Create an empty <code>./content</code> folder</p></li>
+    <li><p>Drop the desired files and folders into <code>./content</code></p></li>
+    <li><p>Add and commit a <a href=".gitlab-ci.yml">.gitlab-ci.yml</a> file to your repository:</p>
+
+<pre><code>pages:
+  stage: deploy
+  image: archlinux/base:latest
+  variables:
+    GIT_SUBMODULE_STRATEGY: recursive
+
+  before_script:
+    - pacman --noconfirm -Syu
+    - pacman --noconfirm -S lua lua-filesystem git
+    - git clone --recursive https://github.com/shagu/webls.git .webls
+
+  script:
+    - cp -f .webls-config.lua .webls/config.lua || true
+    - rm -r .webls/content
+    - cp -r content .webls/content
+    - ( cd .webls &amp;&amp; ./webls.lua )
+    - mv .webls/www public
+
+  artifacts:
+    paths:
+    - public
+</code></pre></li>
+</ol>
+
+<p>GitLab-CI should now start automatically and prepare your website. The page should now become available under: <strong>https://«yourname».gitlab.io/«repoistory»</strong>.</p>
+
+<h3>Manual Setup</h3>
+
+<ol>
+    <li>Install the dependencies: <code>lua</code> and <code>lua-filesystem</code></li>
+    <li>Clone the repository: <code>git clone --recursive https://github.com/shagu/webls.git</code></li>
+    <li>Put your files into the <code>content/</code> directory</li>
+    <li>Run <code>./webls.lua</code></li>
+    <li>Move the <code>www/</code> folder to your web root</li>
+</ol>
+
+<h3>Customization</h3>
+<p>To customize a webls website, add and commit a <a href="config.lua">.webls-config.lua</a> file into the root directory of your website repository. The above mentioned ci-configs make sure, the config will be used.
+The <a href="config.lua">Configuration File</a> includes the following options:</p>
+
+<ul>
+    <li><p><strong>title</strong>: The title of the website which is shown on the browser titlebar and on the website itself as header</p></li>
+    <li><p><strong>description:</strong>: A brief description of your website, a slogan or whatever. It is displayed next to the title</p></li>
+    <li><p><strong>website:</strong>: The full name of the domain that your website runs on. Is not yet in use</p></li>
+    <li><p><strong>cname</strong>: The domain of your website. Will create a CNAME file in the output directory. Required for custom domains on github-pages</p></li>
+    <li><p><strong>pagesuffix</strong>: When set to true, all generated sidebar links will point to an index.html of the directory. This is useful for local development.</p></li>
+    <li><p><strong>scanpath</strong>: The foldername of the input directory, where the content is present.</p></li>
+    <li><p><strong>www</strong>: The foldername of the output directory, where the content should be rendered to.</p></li>
+    <li><p><strong>modules:</strong>: All available modules that are used to render content in the specified order.</p></li>
+    <li><p><strong>html:</strong> all html-files found in the input directory will be added to the content view. <em>(.html, .htm)</em></p></li>
+    <li><p><strong>markdown:</strong> is the core module and converts text and markdown files into html. <em>(.md, .txt)</em></p></li>
+    <li><p><strong>git</strong>: will display a widget with the git-url and a link to the latest download.zip if github or gitlab is detected.</p></li>
+    <li><p><strong>gallery</strong>: will add an image-gallery to the page. <em>(.png, .jpg, .jpeg, .webp, .gif)</em></p></li>
+    <li><p><strong>download</strong>: will add a download section to the page. <em>(.tar, .gz, .bz2, .xz, .zip, .rar)</em></p></li>
+    <li><p><strong>footer</strong>: adds a footer to the page.</p></li>
+    <li><p><strong>colors</strong>: The colors that are used for the website</p></li>
+    <li><p><strong>accent</strong>: The unique color of your website</p></li>
+    <li><p><strong>border</strong>: The default border color around all objects, and the top-navigation background</p></li>
+    <li><p><strong>bg-page</strong>: The background of the body of the page</p></li>
+    <li><p><strong>bg-content</strong>: The background color of the modules generated fields</p></li>
+    <li><p><strong>bg-sidebar</strong>: The background color of the sidebar</p></li>
+    <li><p><strong>fg-page</strong>: The font color of the body of the page</p></li>
+    <li><p><strong>fg-sidebar</strong>: The font color of the sidebar</p></li>
+</ul>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

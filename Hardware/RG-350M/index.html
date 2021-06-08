@@ -1,0 +1,169 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../">welcome!</a> » <a href="../">Hardware</a> » <span>RG-350M</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="rg350m.md" class="text">
+<h1>RG350M Handheld Linux Gaming Console</h1>
+
+<pre><code>CPU: JZ4770 1GHz MIPS (Single Core)
+RAM: 512MB RAM (DDR2)
+Display: 3.5 Inch 640x480 (IPS)
+Storage: 2 SD-Card slots
+Battery : Li-polymer 2500mAh battery
+</code></pre>
+
+<p>The RG350M is a portable gaming console based on the <a href="https://github.com/retrogamehandheld/OpenDingux/wiki">OpenDingux</a> project.
+The devices has 2 SD-Card slots where one is for the root filesystem and the other for external data like roms or videos.
+It has by default full root access via SSH (over USB). Each document and shop states it being a dual core processor, but I've been
+only able to see one core in "htop" and also <code>cat /proc/cpuinfo</code> only lists one.</p>
+
+<h2>CPU:</h2>
+
+<pre><code>system type            : JZ4770
+machine                : Unknown
+processor              : 0
+cpu model              : Ingenic JZRISC V4.15  FPU V0.0
+BogoMIPS               : 792.57
+wait instruction       : yes
+microsecond timers     : no
+tlb_entries            : 32
+extra interrupt vector : yes
+hardware watchpoint    : yes, count: 1, address/irw mask: [0x0fff]
+isa                    : mips1 mips32r2
+ASEs implemented       :
+shadow register sets   : 1
+kscratch registers     : 0
+core                   : 0
+VCED exceptions        : not available
+VCEI exceptions        : not available
+</code></pre>
+
+<h2>Kernel:</h2>
+
+<pre><code>Linux opendingux 3.12.0-dingux+ #7 Thu May 21 11:21:56 CST 2020 mips GNU/Linux
+</code></pre>
+
+<p>A kernel source patched for RG350M can be found <a href="https://github.com/tonyjih/RG350_linux">Here</a>.</p>
+
+<h2>Links</h2>
+
+<p>Some interesting projects can be found below:</p>
+
+<ul>
+    <li><a href="https://github.com/od-contrib">Buildroot</a></li>
+    <li><a href="https://github.com/tonyjih/RG350_linux">Kernel</a></li>
+    <li><a href="https://github.com/retrogamehandheld/RG-350/tree/master/docs">Documents</a></li>
+    <li><a href="https://github.com/Ninoh-FOX/RG350-ROGUE-CFW">Rogue Firmware</a></li>
+    <li><a href="https://rs97.bitgala.xyz/RG350M/">Stock Firmware/Blobs</a></li>
+</ul>
+
+<h2>Setup LXC Build Container</h2>
+
+<p>When using buildroot in combination with arch-linux one will run into some issues, since buildroot
+heavily depends on host utils such as compilers. This will create an ubuntu-focal (20.04) container:</p>
+
+<pre><code>lxc-create buildroot -t download -- -d ubuntu -r focal -a amd64
+sed -i "s/lxc.net.0.type = empty/lxc.net.0.type = none/g" /var/lib/lxc/buildroot/config
+
+lxc-start buildroot
+lxc-attach buildroot
+
+echo 'echo "nameserver 8.8.8.8" &gt; /etc/resolv.conf' &gt;&gt; /root/.bashrc &amp;&amp; exit
+lxc-attach buildroot
+</code></pre>
+
+<h3>Install Dependencies</h3>
+
+<pre><code>apt-get update
+apt-get install build-essential bc git bzr subversion mercurial wget libncurses-dev unzip rsync time \
+  squashfs-tools gcc-multilib g++-multilib automake cpio gettext mtools dosfstools
+</code></pre>
+
+
+<h3>Build Instructions: OpenDingux (Mainline)</h3>
+
+<p>The OpenDingux Project added official support for the RG350(M) devices. For this, the gcw0 target is used
+which also provides device trees and bootloaders for the RG350(M) variants. This build is using the latest
+5.9-Kernel branch und updated components across the board. However, it still has some issues like <a href="https://github.com/OpenDingux/buildroot/issues/20">graphical glitches</a>
+ and some <a href="https://github.com/OpenDingux/buildroot/issues/25">gmenu2x settings</a> are not working as they should.</p>
+
+<h4>Fetch &amp; Compile</h4>
+
+<pre><code>su -l ubuntu
+git clone https://github.com/OpenDingux/buildroot.git OpenDingux; cd OpenDingux
+make od_gcw0_defconfig BR2_EXTERNAL=board/opendingux
+make
+</code></pre>
+
+<h4>Install</h4>
+<p>Create an SDCard with MBR/DOS partition table and create two partitions:</p>
+
+<pre><code>- VFAT (512MB)
+- EXT4 (  *MB)
+</code></pre>
+
+<p>In this example, /dev/sda is the SD-Card device:</p>
+
+<pre><code>cd output/images/
+dd if=ubiboot-rg350.bin of=/dev/sda bs=512 seek=1 count=16 conv=notrunc
+
+mkdir -p /mnt/sdcard
+mount /dev/sda1 /mnt/sdcard
+
+cat uzImage.bin rg350m.dtb &gt; /mnt/sdcard
+cp modules.squashfs rootfs.squashfs mininit-syspart /mnt/sdcard
+mkdir -p /mnt/sdcard/dev /mnt/sdcard/root
+</code></pre>
+
+<h3>Build Instructions OD-Contrib (Old Kernel)</h3>
+
+<p>There's a project called <code>buildroot-rg350-old-kernel</code> on <a href="https://github.com/od-contrib/buildroot-rg350-old-kernel">GitHub</a>
+which is an effort to provide a toolchain for RG350(M) devices, by using the latest buildroot and opendingux packages where
+possible. It uses the old kernel that is known to work and patches buildroot/opendingux accordingly.</p>
+
+<h4>Fetch &amp; Compile</h4>
+
+<pre><code>su -l ubuntu
+git clone --recurse-submodules https://github.com/od-contrib/buildroot-rg350-old-kernel.git
+cd buildroot-rg350-old-kernel
+make rg350m_defconfig BR2_EXTERNAL=board/opendingux:opks
+board/opendingux/gcw0/make_initial_image.sh rg350m
+</code></pre>
+
+<h4>Install</h4>
+
+<pre><code>cd output-rg350m/images/od-imager/images
+dd if=sd_image.bin of=/dev/sda bs=4M conv=fsync
+</code></pre>
+
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

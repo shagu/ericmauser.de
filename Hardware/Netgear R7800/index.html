@@ -1,0 +1,212 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../">welcome!</a> » <a href="../">Hardware</a> » <span>Netgear R7800</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="netgear-r7800.md" class="text">
+<h1>OpenWRT on Netgear Nighthawk R7800</h1>
+
+<h2>About</h2>
+
+<pre><code>Processor: Dual Core ARMv7 Processor
+Layout: Qualcomm Atheros IPQ8065 SoC
+WiFi: Qualcomm Atheros QCA9984, 2.4GHz 802.11bgn, 5GHz a/n/ac
+RAM: 512 MB
+Flash: 128 MB
+Ports: 2x USB 3.0, 1x eSATA
+</code></pre>
+
+<h2>Compile</h2>
+
+<pre><code>git clone https://www.github.com/openwrt/openwrt
+cd openwrt
+./scripts/feeds update -a
+./scripts/feeds install -a
+make menuconfig
+
+# Target System -&gt; `Qualcomm Atheros IPQ806X`
+# Target Profile -&gt; `Netgear Nighthawk X4S R7800`
+# LuCI -&gt; Collections -&gt; `luci`, `luci-ssl`
+
+make -j16
+du -hs bin/targets/ipq806x/generic/*
+</code></pre>
+
+<h2>Flash via TFTP</h2>
+
+<p><em>(Using <code>extra/tftp-hpa</code> on Archlinux)</em></p>
+
+<ol>
+    <li>Turn off the power, push and hold the reset button with a pin</li>
+    <li>Turn on the power and wait till power led starts flashing white (after it first flashes orange for a while)</li>
+    <li>Release the pin and tftp the factory img in binary mode. The power led will stop flashing if you succeeded in transferring the image, and the router reboots rather quickly with the new firmware.</li>
+</ol>
+
+<p><em>tftp:</em></p>
+<pre><code>tftp 192.168.1.1
+mode binary
+put *-factory.img
+quit
+</code></pre>
+
+<h2>Atheros WDS (AP+Repeater)</h2>
+
+<p><em>based on: <a href="https://openwrt.org/docs/guide-user/network/wifi/atheroswds">OpenWRT Atheros WDS</a></em></p>
+
+<h3>Router (Access Point)</h3>
+
+<ul>
+    <li>Open <code>/etc/config/wireless</code> and add <code>option wds '1'</code> to each <code>config wifi-iface</code> entry.</li>
+</ul>
+
+<h3>Repeater (STAtion)</h3>
+
+<ul>
+    <li><p>Open <code>/etc/config/dhcp</code> and disable DHCP:</p></li>
+    <li><p>Add <code>option ignore '1'</code> to the <code>config dhcp 'lan'</code> section</p></li>
+    <li><p>Replace <code>option dhcpv6 'server'</code> by <code>option dhcpv6 'disabled'</code></p></li>
+    <li><p>Open <code>/etc/config/network</code> and set IP Address:</p></li>
+    <li><p>Set IP-Address: <code>option ipaddr '10.4.4.2'</code> <em>(Repeater IP)</em></p></li>
+    <li><p>Set Gateway: <code>option gateway '10.4.4.1'</code> <em>(Router IP)</em></p></li>
+    <li><p>Enable STP: <code>option stp '1'</code></p></li>
+    <li><p>Open <code>/etc/config/wireless</code> and setup WiFi's:</p></li>
+    <li><p>Duplicate all Router WiFi entries <strong>twice</strong></p></li>
+    <li><p>On the first, replace <code>option mode 'ap'</code> by <code>option mode 'sta'</code></p></li>
+    <li><p>On the second, remove <code>option wds '1'</code></p></li>
+    <li><p>Make sure the devices are enabled</p></li>
+    <li><p>Remove <code>option disabled '1'</code> from <code>config wifi-device</code> section</p></li>
+    <li><p>Open <code>/etc/config/dhcp</code> and setup DHCP forwarding:</p></li>
+    <li><p>Add <code>list server '10.4.4.1'</code> to the <code>config dnsmasq</code> section <em>(Router IP)</em></p></li>
+</ul>
+
+<h2>LAN-Only WiFi</h2>
+
+<pre><code>export PASS="CHANGEIT"
+export NAME="LAN_ONLY_WIFI"
+export DEVICE="radio1"
+
+uci set network.$NAME=interface
+uci set network.$NAME.type='bridge'
+uci set network.$NAME.proto='static'
+uci set network.$NAME.ipaddr='10.4.5.1'
+uci set network.$NAME.netmask='255.255.255.0'
+
+uci set dhcp.$NAME=dhcp
+uci set dhcp.$NAME.start='100'
+uci set dhcp.$NAME.leasetime='4h'
+uci set dhcp.$NAME.limit='250'
+uci set dhcp.$NAME.interface="$NAME"
+
+uci add firewall zone
+uci set firewall.@zone[-1].name="$NAME"
+uci set firewall.@zone[-1].input='ACCEPT'
+uci set firewall.@zone[-1].output='ACCEPT'
+uci set firewall.@zone[-1].forward='ACCEPT'
+uci set firewall.@zone[-1].network="$NAME"
+
+uci add firewall forwarding
+uci set firewall.@forwarding[-1].dest='lan'
+uci set firewall.@forwarding[-1].src="$NAME"
+
+uci add firewall forwarding
+uci set firewall.@forwarding[-1].dest="$NAME"
+uci set firewall.@forwarding[-1].src='lan'
+
+uci add wireless wifi-iface
+uci set wireless.@wifi-iface[-1].ssid="$NAME"
+uci set wireless.@wifi-iface[-1].device="$DEVICE"
+uci set wireless.@wifi-iface[-1].mode='ap'
+uci set wireless.@wifi-iface[-1].disabled='1'
+uci set wireless.@wifi-iface[-1].encryption='psk2'
+uci set wireless.@wifi-iface[-1].key="$PASS"
+uci set wireless.@wifi-iface[-1].network="$NAME"
+
+uci commit
+</code></pre>
+
+<h2>WAN-Only WiFi</h2>
+
+<pre><code>export PASS="CHANGEIT"
+export NAME="WAN_ONLY_WIFI"
+export DEVICE="radio1"
+
+uci set network.wan.type='bridge'
+uci set network.wan6.type='bridge'
+
+uci add wireless wifi-iface
+uci set wireless.@wifi-iface[-1].ssid="$NAME"
+uci set wireless.@wifi-iface[-1].device="$DEVICE"
+uci set wireless.@wifi-iface[-1].mode='ap'
+uci set wireless.@wifi-iface[-1].disabled='1'
+uci set wireless.@wifi-iface[-1].encryption='psk2'
+uci set wireless.@wifi-iface[-1].key="$PASS"
+uci set wireless.@wifi-iface[-1].network='wan wan6'
+uci set wireless.@wifi-iface[-1].isolate='1'
+
+uci commit
+</code></pre>
+
+
+<h2>Menuconfig for NAS Usage</h2>
+
+<p><strong>Base</strong></p>
+
+<ul>
+    <li>Target System -> <code>Qualcomm Atheros IPQ806X</code></li>
+    <li>Target Profile -> <code>Netgear Nighthawk X4S R7800</code></li>
+    <li>LuCI -> Collections -> <code>luci</code>, <code>luci-ssl</code></li>
+    <li>LuCI -> Applications -> <code>luci-app-minidlna</code>, <code>luci-app-radicale2</code>, <code>luci-app-samba4</code></li>
+</ul>
+
+<p><strong>Kernel</strong></p>
+
+<ul>
+    <li>Kernel Modules -> Cryptographic API -> <code>kmod-crypto-sha256</code>, <code>kmod-crypto-sha512</code>, <code>kmod-crypto-xts</code>, <code>kmod-crypto-rng</code></li>
+    <li>Kernel Modules -> Filesystems -> <code>kmod-fs-cifs</code>, <code>kmod-fs-ext4</code>, <code>kmod-fs-vfat</code>, <code>kmod-fs-ntfs</code></li>
+    <li>Kernel Modules -> Sound Support -> <code>kmod-usb-audio</code></li>
+    <li>Kernel Modules -> USB Support -> <code>kmod-usb-storage-extras</code></li>
+    <li>Kernel Modules -> Block Devices -> <code>kmod-dm</code>, <code>kmod-md-mod</code>, <code>kmod-md-raid1</code>, <code>kmod-loop</code></li>
+</ul>
+
+<p><strong>Utils</strong></p>
+
+<ul>
+    <li>Utilities -> Encryption -> <code>cryptsetup</code></li>
+    <li>Utilities -> Editors -> <code>vim-full</code></li>
+    <li>Utilities -> Disc -> <code>cfdisk</code>, <code>mdadm</code></li>
+    <li>Utilities -> Filesystem -> <code>dosfstools</code>, <code>e2fsprogs</code>, <code>ncdu</code></li>
+    <li>Utilities -> Shells -> <code>bash</code></li>
+    <li>Utilities -> Terminal -> <code>screen</code></li>
+    <li>Multimedia -> <code>youtube-dl</code></li>
+    <li>Sound -> <code>forked-daapd</code>, <code>shairport-sync-mini</code></li>
+</ul>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

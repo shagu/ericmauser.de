@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../">welcome!</a> » <a href="../">Projects</a> » <span>arch-install</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="README.md" class="text">
+<h1>arch-install</h1>
+<p>A simple (re)installer script, focused to make encrypted archlinux installations as easy and fast as possible. The main goal of arch-install is to provide a solution to easilly install and re-install archlinux on a full disk encryption. The entire install procedure is based on <code>dialog</code>.</p>
+
+<h2>Download</h2>
+<p>Nightly builds can be obtained below. Those images are built via <code>archiso</code> and are patched to include the latest arch-install script.
+The latest travis-ci release builds can be reviewed here: <a href="https://travis-ci.org/shagu/arch-install/">Build Job</a>.</p>
+
+<ul>
+    <li><strong><a href="https://github.com/shagu/arch-install/releases/latest/download/arch-install.iso">↓ Download Installer ISO</a></strong></li>
+    <li><strong><a href="https://github.com/shagu/arch-install/releases/latest/download/arch-install-ssh.iso">↓ Download Installer ISO (Remote)</a></strong></li>
+</ul>
+
+<p><em>Info: The Remote Image is the same as the regular one, but has SSH without any password enabled by default. This is insecure and should only be used within your local network on headless machines</em></p>
+
+<h2>Preview</h2>
+<p><img src="preview.gif" alt="preview"/></p>
+
+<h2>Features</h2>
+<p>* Supports several desktops
+* Uses LUKS Encryption
+* Uses LVM Volumes
+* Compatible to UEFI and BIOS
+* Can reuse previous installation (keep /home untouched)
+* Remote crypt unlock via ssh on headless machines
+* Optional pseudo-crypt (empty disk password)</p>
+
+<h3>Optional: Manually create ISO</h3>
+<p>First make sure to have <code>archiso</code> installed and run the <code>Makefile</code>:</p>
+
+<pre><code>pacman -S archiso
+make
+</code></pre>
+
+<h3>Optional: Use official Archlinux ISO</h3>
+<p>1. Download the lastest archlinux live iso
+2. Write the iso to an empty USB stick
+3. Boot the USB stick
+4. Connect your network
+5. Download the installer: <code>wget https://raw.githubusercontent.com/shagu/arch-install/master/arch-install.sh</code>
+6. Run the installer: <code>./arch-install.sh</code></p>
+
+</div><div id="RELEASE.md" class="text">
+<h1>arch-install</h1>
+<p>A simple (re)installer script, focused to make encrypted archlinux installations as easy and fast as possible. The main goal of arch-install is to provide a solution to easilly install and re-install archlinux on a full disk encryption. The entire install procedure is based on <code>dialog</code>.</p>
+
+<h2>Features</h2>
+<p>* Supports several desktops
+* Uses LUKS Encryption
+* Uses LVM Volumes
+* Compatible to UEFI and BIOS
+* Can reuse previous installation (keep /home untouched)
+* Remote crypt unlock via ssh on headless machines
+* Optional pseudo-crypt (empty disk password)</p>
+
+</div><div class="gallery"><a href="preview.gif"><img src="preview.gif"/><span>preview</span></a></div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

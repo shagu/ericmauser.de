@@ -1,0 +1,189 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../../../">welcome!</a> » <a href="../../../">Projects</a> » <a href="../../">wow-addons</a> » <a href="../">pfQuest</a> » <span>docs</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="config.md" class="text">
+<h1>config</h1>
+
+<h2>["minimapbutton"]</h2>
+<p>This option can be used to hide the pfQuest-minimap button. <br/>
+Default=1</p>
+
+<h2>["trackingmethod"]</h2>
+<p>The current method what quests should be automatically shown and tracked. <br/>
+Default=1
+1. Show All Quests
+2. Show Tracked Quests
+3. Manual Selection ("Show"-Button)
+4. Disable all Quests</p>
+
+<h2>["allquestgivers"]</h2>
+<p>If selected, this option will query for all questgivers and shows them on the map. <br/>
+Default=1</p>
+
+<h2>["showlowlevel"]</h2>
+<p>If <code>allquestgivers</code> is selected, this option can be used to hide low-level quests from the map. If set to <code>1</code>, then no filters are applied. <br/>
+Default=1</p>
+
+<h2>["showids"]</h2>
+<p>If selected, the result buttons of the browser and the tooltips of nodes on the maps will show the ID of the unit/object/item/quest. <br/>
+Default=0</p>
+
+<h2>["currentquestgivers"]</h2>
+<p>If selected, the current quest-ender npcs/objects will be shown on the map for active quests. <br/>
+Default=1</p>
+
+<h2>["minimapnodes"]</h2>
+<p>If selected, minimap nodes will be shown. <br/>
+Default=1</p>
+
+<h2>["questlogbuttons"]</h2>
+<p>If selected, buttons will be shown in the questlog to show, clean and reset the nodes. <br/>
+Default=1</p>
+
+<h2>["worldmapmenu"]</h2>
+<p>If selected, a dropdown menu will be shown on the worldmap to select the <code>trackingmethod</code>. <br/>
+Default=1</p>
+
+<h2>["worldmaptransp"]</h2>
+<p>This option represents the transparency of worldmap nodes. Can be values between 0.0 and 1.0 <br/>
+Default=1.0</p>
+
+<h2>["minimaptransp"]</h2>
+<p>This option represents the transparency of minimap nodes. Can be values between 0.0 and 1.0 <br/>
+Default=1.0</p>
+
+<h2>["mindropchance"]</h2>
+<p>This option defines the minimum drop chance a unit or object must have for an item, so that its node is displayed on the map. Can be values between 0.0 and 100.0. Values > 100 will show no drops at all. <br/>
+Default=0</p>
+
+<h2>["worldmaptexture"]</h2>
+<p>The default texture of worldmap nodes when no texture is set in the <code>meta</code>. <br/>
+Default="node1"</p>
+
+<h2>["minimaptexture"]</h2>
+<p>The default texture of minimap nodes when no texture is set in the <code>meta</code>. <br/>
+Default="node2"</p>
+
+</div><div id="meta.md" class="text">
+<h1>meta object</h1>
+
+<p>The meta object is the core object of each node. It includes information such as x- and y-values of the node aswell as the zone. It's the main resource of all information which will later be shown in the tooltip and is also used to pass further options and arguments to the display functions of the map and database.</p>
+
+<h2>Mandatory</h2>
+<h3>["addon"]</h3>
+<p>The name of the addon that creates the node. This is later used to clean up nodes by addon name. pfQuest uses "PFQUEST" where empty values are defaulted to "PFDB" in order to make it possible to remove all nodes of one addon at once.</p>
+
+<h3>["title"]</h3>
+<p>This is the title of the node that should be displayd. This can also be used to remove all nodes by title.</p>
+
+<h3>["zone"]</h3>
+<p>The mapID (see zones.lua) of the node's position.</p>
+
+<h3>["x"]</h3>
+<p>The x-axis of the node's position</p>
+
+<h3>["y"]</h3>
+<p>The y-axis of the node's position</p>
+
+<h2>Set by Spawn/Object Queries</h2>
+<h3>["spawn"]</h3>
+<p>This defines the name of the spawn that should be shown and the title of the node. It gets replaced if either <code>"item"</code> or <code>"quest"</code> is set. <br/>
+The <code>SearchMob</code> and <code>SearchObject</code> function will use this to set the "title" of the node.</p>
+
+<h3>["spawnid"]</h3>
+<p>This defines the ID of the spawn that should be shown in the title of the node tooltip when the <code>showids</code> option is enabled. <br/>
+The <code>pfMap:NodeEnter()</code> function will use this to set the "title" of the node.</p>
+
+<h3>["level"]</h3>
+<p>Can be used to print a level for the created node this can either be a string with a number inside or a range like <code>"16-18"</code>.</p>
+
+<h3>["respawn"]</h3>
+<p>This can be set to the respawn timer of the given object/unit.</p>
+
+<h3>["spawntype"]</h3>
+<p>This should be set to the type the node is. Usually this is either <code>"Unit"</code> or <code>"Object"</code>.</p>
+
+<h2>Set by Item Queries</h2>
+<h3>["item"]</h3>
+<p>This defines the name of the item that should be shown and the title of the node. It gets replaced if "quest" is set. <br/>
+The <code>SearchMob</code> and <code>SearchObject</code> function will use this to set the "title" of the node.</p>
+
+<h3>["itemid"]</h3>
+<p>If the node displays an item, this value can be set to the corresponding itemid to make further working with the node easier.</p>
+
+<h3>["itemlink"]</h3>
+<p>This is not set directly. This can be set to the generated itemlink built with the rarity color, name and id of the item. This is usually done inside the Tooltip function and cached here.</p>
+
+<h3>["droprate"]</h3>
+<p>If the item is dropped or looted from any object or unit, this can represent the dropchance.</p>
+
+<h3>["sellcount"]</h3>
+<p>This is used for entries from within the vendor table of the item database to represent the number of items one vendor has. If set to <code>0</code> its equal to infinite.</p>
+
+<h2>Set by Quest Queries</h2>
+<h3>["qlvl"]</h3>
+<p>The quests minimal level to accept the quest.</p>
+
+<h3>["qmin"]</h3>
+<p>The quests display level, usually the recommended level by the questlog.</p>
+
+<h3>["quest"]</h3>
+<p>This defines the name of the quest that should be shown and the title of the node. If quest is set, neither spawn nor item will be used as title. <br/>
+The <code>SearchMob</code> and <code>SearchObject</code> function will use this to set the "title" of the node.</p>
+
+<h2>Display Related</h2>
+<h3>["texture"]</h3>
+<p>If no texture is set, the map function will use its default node icon. Otherwise this can be so vendor, quest or custom symbols. The value should be a path to an exising image file. ( e.g: <code>Interface\\AddOns\\pfQuest\\img\\icon_vendor</code> )</p>
+
+<h3>["vertex"]</h3>
+<p>This can be used to tint textures with a given color. The value is a table with RGB colors. ( e.g: <code>{ 1, .8, .4 }</code> )</p>
+
+<h3>["layer"]</h3>
+<p>[DEPRECATED: The layer is now auto-generated to a value based on its texture]
+The layer can be used to force a position above or below other nodes. Multiple nodes on the same x/y-axis are merged into one. The higher the value, the more likely it is that this texture will replace the other nodes visibility.</p>
+
+
+<h2>Additional Function Arguments</h2>
+<p>Those values are not reliable to read after the function calls. Those are used to request special behaviours of one of the DB-query functions.</p>
+
+<h3>["qlogid"]</h3>
+<p>Represents the quests current position in the players questlog. This is used to gather extended data, like current progress of the quest, which will be written into <code>qstate</code>. If this is set, the <code>SearchQuest</code> and <code>SearchQuestByID</code> functions will also behave in a way as the pfQuest tracker needs it:
+  * It does not show the quest-starters
+  * It uses grey question marks for incompleted quests
+  * It uses yellow question marks for completed quests
+  * It will skip already finished objectives</p>
+
+<h3>["qstate"]</h3>
+<p>This reflects the current state of the quest in the questlog, can be strings like <code>"done"</code> or <code>"progress"</code>.</p>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

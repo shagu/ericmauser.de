@@ -1,0 +1,315 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../../">welcome!</a> » <a href="../../">Projects</a> » <a href="../">yada-gtk-theme</a> » <span>arc-theme</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a><a class="sidelink" href=".github/">.github</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="HACKING.md" class="text">
+<h3>Editing the theme</h3>
+
+<h4>Editing the CSS based themes in the <code>common</code> directory (cinnamon, gnome-shell, gtk-3.0)</h4>
+
+<p>This theme uses libsass to process the various .scss files. Never edit any of the .css files manually.</p>
+
+<ul>
+    <li><p>Edit the <code>common/*/sass/*.scss</code> files.</p></li>
+    <li><p>Rebuild to generate all css files using <code>sassc</code>.</p></li>
+</ul>
+
+<h4>Editing the GTK 2 themes</h4>
+
+<ul>
+    <li><p>Go to <code>common/gtk-2.0</code></p></li>
+    <li><p>The colors and includes are defined in <code>light/gtkrc</code>, <code>dark/gtkrc</code> and <code>darker/gtkrc</code> for each theme variant</p></li>
+    <li><p><code>main.rc</code> contains the major part of the theme</p></li>
+    <li><p><code>panel.rc</code> contains the panel styling for Xfce and MATE</p></li>
+    <li><p><code>apps.rc</code> contains some application specific rules</p></li>
+</ul>
+
+<p>Because this theme is heavily based on the pixmap engine, a lot of the styling comes from the images in the <code>light/assets</code> and <code>dark/assets</code> folders. Don't edit these images directly. See the next section.</p>
+
+<h4>Editing the images for the GTK 2, GTK 3 and XFWM4 themes</h4>
+
+<ul>
+    <li><p>Go to the <code>common/gtk-2.0/{light,dark}</code>, <code>common/gtk-3.0/$gtk-version</code> or <code>common/xfwm4/{light,dark}</code> directory.</p></li>
+    <li><p>Open the <code>assets.svg</code> file in inkscape. Each object in the .svg file corresponds to an image in the <code>assets</code> folder.</p></li>
+    <li><p>Find the object you want to edit and make your changes. <strong>Important:</strong> Don't change the object <em>id</em>!</p></li>
+    <li><p>Save <code>assets.svg</code> and rebuild.</p></li>
+</ul>
+
+<hr/>
+
+<h3>Contributing to the project</h3>
+
+<p>The main purpose of this fork is to <em>maintain</em> the theme. This means that all major changes to the visual style should be avoided, unless there are very good reason for them.</p>
+
+<p>All contributions to the theme are appreciated, as long as they are useful and well implemented, and don't increase the maintenance load, or unnecessarily alter the visual style. If you're unsure about anything, or would like to work on some larger project, it's not a bad idea to open an issue for discussion before submitting a pull request.</p>
+
+<h4>Sending pull requests</h4>
+
+<p>Nicely split single-purpose commits, and clean and descriptive commit messages are greatly appreciated. Please abide by the following commit message guidelines if possible:</p>
+
+<ul>
+    <li><p>Prepend the first line of the message with a tag describing what part of the theme is affected, e.g. <code>gtk3:</code>, <code>cinnamon:</code>, <code>build:</code> etc. This makes the commit logs much cleaner.</p></li>
+    <li><p>Add a <em>full link</em> to the pull request you opened, or a related github issue at the end of the commit message for future reference.</p></li>
+</ul>
+
+
+
+</div><div id="INSTALL.md" class="text">
+<h2>Installing Arc from the source</h2>
+
+<h4>Getting the source</h4>
+
+<p>To get the source, either clone the git repository with e.g.</p>
+
+<pre><code>git clone https://github.com/jnsh/arc-theme --depth 1
+</code></pre>
+
+<p>Or download and extract a <a href="https://github.com/jnsh/arc-theme/archive/master.zip">snapshot</a> of the master git branch, or the latest <a href="https://github.com/jnsh/arc-theme/releases/latest">release tarball</a>.</p>
+
+<h4>Dependencies</h4>
+
+<h5>Build dependencies</h5>
+
+<p>To build the theme the following packages are required:
+* <code>meson</code></p>
+
+<p>The following packages are only required for building certain themes:
+* <code>sassc</code> for GTK 3, Cinnamon, and GNOME Shell
+* <code>inkscape</code> for GTK 2, GTK 3, and Xfwm</p>
+
+<p>You can avoid these dependencies by choosing to not build specific themes using the <code>themes</code> build option.</p>
+
+<h5>Runtime dependencies</h5>
+
+<p>For the GTK 2 theme to function properly, install the following:
+* <code>gnome-themes-extra</code>, or <code>gnome-themes-standard</code> before GNOME version 3.28
+* The murrine GTK 2 engine. This has different names depending on the distribution:
+  * <code>gtk-engine-murrine</code> (Arch Linux)
+  * <code>gtk2-engines-murrine</code> (Debian, Ubuntu, elementary OS)
+  * <code>gtk-murrine-engine</code> (Fedora)
+  * <code>gtk2-engine-murrine</code> (openSUSE)
+  * <code>gtk-engines-murrine</code> (Gentoo)</p>
+
+<h4>Building and installation</h4>
+
+<p>Arc-theme uses <a href="https://mesonbuild.com/">Meson</a> build system, refer to its documentation for further information about the build process.</p>
+
+<p>The following instructions should work for most common cases.</p>
+
+<h5>Setup and configure a build direcortry</h5>
+
+<p>First you need to setup and configure a new build directory (e.g. <code>build/</code>) from the cloned/extracted source code directory.</p>
+
+<p>You should at least configure the build prefix with <code>--prefix=</code> option, usually <code>/usr</code> for system wide installation, or <code>$HOME/.local</code> for installing for your user only. Additionally you may set any Arc-theme specific <a href="#build-options">build options</a> according to your needs and preferences, with <code>-Doption=value</code> command line argument.</p>
+
+<p>For example, configure to install in your home directory, and to only build the Arc-Darker variant with:</p>
+
+<pre><code>meson setup --prefix=$HOME/.local -Dvariants=darker build/
+</code></pre>
+
+<p>The build options can later be changed with <code>meson configure</code> command, e.g.</p>
+
+<pre><code>meson configure --prefix=/usr -Dvariants=light,darker build/
+</code></pre>
+
+<h5>Build and install</h5>
+
+<p>Build and install the theme according to your configuration by running the following:</p>
+
+<pre><code>meson install -C build/
+</code></pre>
+
+<h5>Note about installation in user's home directory</h5>
+
+<p>Some themes (at least GTK 2) aren't loaded from <code>~/.local/share/themes/</code>. You can work around this e.g. by symlinking the Arc theme directories in <code>~/.local/share/themes/</code> to <code>~/.themes/</code> with following commands:</p>
+
+<pre><code>mkdir -p ~/.themes/
+for d in Arc{,-Dark,-Darker,-Lighter}{,-solid}; do
+  [ -d ~/.local/share/themes/$d ] &amp;&amp; ln -s ~/.local/share/themes/$d ~/.themes/;
+done
+</code></pre>
+
+<h4>Versioned themes</h4>
+
+<p>The source code comes branched for different versions of GTK 3, GNOME Shell, and Cinnamon. Only one version of those themes will be built and installed, and using the wrong versions will likely result in visual issues.</p>
+
+<p>The versions that will be built can be set manually with <code>cinnamon_version</code>, <code>gnome_shell_version</code> and <code>gtk3_version</code> build options.</p>
+
+<p>Otherwise the build system tries to determine correct versions using the following packages on the build environment:
+* <code>gnome-shell</code> for detecting GNOME Shell version
+* <code>cinnamon</code> for detecting Cinnamon version
+* <code>pkgconf</code> and the GTK 3 package, or its development files for distributions that ship those separately (e.g. <code>libgtk-3-dev</code> for Debian based distros or <code>gtk3-devel</code> for RPM based distros), for detecting GTK 3 version</p>
+
+<p><strong>Note:</strong> The build setup for GTK 3, Cinnamon and GNOME Shell themes will fail, if their versions can't be determined either from the build options, or from installed packages.</p>
+
+<h4>Build options</h4>
+
+<p>Arc-theme specific build options can be set or changed with <code>meson configure -Doption=value &lt;build_directory&gt;</code> e.g.</p>
+
+<pre><code>meson configure -Dthemes=gtk3,plank,xfwm -Dtransparency=false -Dgtk3_version=3.24 build/
+</code></pre>
+
+<p>Option | Default value | Description
+--- | --- | ---
+<code>themes</code> | <code>cinnamon,gnome-shell,gtk2,gtk3,metacity,plank,unity,xfwm</code> | List of themes to build
+<code>variants</code> | <code>light,darker,dark,lighter</code> |  List of theme variants to build
+<code>transparency</code> | <code>true</code> | Enable or disable transparency
+<code>cinnamon_version</code> | - | Build Cinnamon theme for specific version
+<code>gnome_shell_version</code> | - | Build GNOME Shell theme for specific version
+<code>gtk3_version</code> | - | Build GTK 3 theme for specific version
+<code>gnome_shell_gresource</code> | <code>false</code> | Compile GNOME Shell theme into a gresource file</p>
+
+<h4>Uninstallation</h4>
+
+<p>Manually remove the theme directories from your install location, e.g.</p>
+
+<pre><code>rm -rf ~/.local/share/themes/Arc{,-Dark,-Darker,-Lighter}{,-solid}
+</code></pre>
+
+</div><div id="README.md" class="text">
+<h1>Arc Theme</h1>
+
+<p>Arc is a flat theme with transparent elements for GTK 3, GTK 2 and various desktop shells, window managers and applications. It's well suited for GTK based desktop environments such as GNOME, Cinnamon, Xfce, Unity, MATE, Budgie etc.</p>
+
+<p>The theme was originally designed and developed by <a href="https://github.com/horst3180/arc-theme">horst3180</a>, but the project has been unmaintained since May 2017.</p>
+
+<p>This fork aims to keep the theme updated with new toolkit and desktop environment versions, resolve pre-existing issues, and improve and polish the theme while preserving the original visual design.</p>
+
+<h2>Arc is available in four variants</h2>
+
+<h5>Arc</h5>
+
+<p><img src="https://raw.githubusercontent.com/jnsh/arc-theme/master/.github/arc-prv.png" alt="A screenshot of the Arc theme"/></p>
+
+<h5>Arc-Darker</h5>
+
+<p><img src="https://raw.githubusercontent.com/jnsh/arc-theme/master/.github/arc-darker-prv.png" alt="A screenshot of the Arc-Darker theme"/></p>
+
+<h5>Arc-Dark</h5>
+
+<p><img src="https://raw.githubusercontent.com/jnsh/arc-theme/master/.github/arc-dark-prv.png" alt="A screenshot of the Arc-Dark theme"/></p>
+
+<h5>Arc-Lighter</h5>
+
+<p><img src="https://raw.githubusercontent.com/jnsh/arc-theme/master/.github/arc-lighter-prv.png" alt="A screenshot of the Arc-Lighter theme"/></p>
+
+<h2>Supported toolkits and desktops</h2>
+
+<p>Arc comes with themes for the following:
+* GTK 2
+* GTK 3 >=3.18
+* GNOME Shell >=3.18
+* Cinnamon >=2.8
+* Unity
+* Metacity
+* Xfwm
+* Plank</p>
+
+<h2>Installation</h2>
+
+<h4>Packages</h4>
+
+<p>Arc Theme is available from the official software package repositories for many common Linux distributions and FOSS operating systems. Installing the theme by using the package manager of your operating system should be the preferred method in most cases.</p>
+
+<p>See <a href="https://github.com/jnsh/arc-theme/wiki/Packages">the wiki</a> for non-exhaustive list of distribution packages, and some additional packages.</p>
+
+<h4>Manual installation</h4>
+
+<p>For installing the theme by compiling it from the source code, see <a href="https://github.com/jnsh/arc-theme/blob/master/INSTALL.md">INSTALL.md</a> for build instructions, list of dependencies, build options and additional details.</p>
+
+<h2>Issues</h2>
+
+<p>If you are experiencing any kind of issues, found a bug, or have a suggestion for improving the theme, please open an issue at <a href="https://github.com/jnsh/arc-theme/issues">https://github.com/jnsh/arc-theme/issues</a>.</p>
+
+<p>Some known issues are addressed in <a href="https://github.com/jnsh/arc-theme/wiki/Common-problems">common problems</a>.</p>
+
+<h2>Contributing</h2>
+
+<p>If you'd like to contribute to the project, open an pull request, or an issue for discussion. See <a href="https://github.com/jnsh/arc-theme/blob/master/HACKING.md">HACKING.md</a> for further details.</p>
+
+<h2>License</h2>
+
+<p>Arc is available under the terms of the GPL-3.0. See <a href="https://github.com/jnsh/arc-theme/blob/master/COPYING">COPYING</a> for details.</p>
+
+<h2>Full Preview</h2>
+
+<p><img src="http://i.imgur.com/tD1OBQ3.png" alt="A full screenshot of the Arc theme"/>
+<sub>Screenshot Details: Icons: <a href="https://github.com/horst3180/arc-icon-theme">Arc</a> | Launcher Icons based on <a href="http://darkdawg.deviantart.com/art/White-Pixel-Icons-252310560">White Pixel Icons</a> | <a href="https://pixabay.com/photo-869593/">Wallpaper</a> | Font: Futura Bk bt</sub></p>
+
+</div><div id="meson_options.txt" class="text">
+<p>option(
+  'themes',
+  type: 'array',
+  choices: ['cinnamon', 'gnome-shell', 'gtk2', 'gtk3', 'metacity', 'plank', 'unity', 'xfwm'],
+  description: 'List of themes to build',
+)</p>
+
+<p>option(
+  'variants',
+  type: 'array',
+  choices: ['light', 'darker', 'dark', 'lighter'],
+  description: 'List of theme variants to build',
+)</p>
+
+<p>option(
+  'transparency',
+  type: 'boolean',
+  value: true,
+  description: 'Enable or disable transparency',
+)</p>
+
+<p>option(
+  'cinnamon_version',
+  type: 'string',
+  description: 'Build Cinnamon theme for specific version',
+)</p>
+
+<p>option(
+  'gnome<em>shell</em>version',
+  type: 'string',
+  description: 'Build GNOME Shell theme for specific version',
+)</p>
+
+<p>option(
+  'gtk3_version',
+  type: 'string',
+  description: 'Build GTK 3 theme for specific version',
+)</p>
+
+<p>option(
+  'gnome<em>shell</em>gresource',
+  type: 'boolean',
+  value: false,
+  description: 'Compile GNOME Shell theme into a gresource file',
+)</p>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

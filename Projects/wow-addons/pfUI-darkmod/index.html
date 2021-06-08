@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../../">welcome!</a> » <a href="../../">Projects</a> » <a href="../">wow-addons</a> » <span>pfUI-darkmod</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="README.md" class="text">
+<h1>pfUI [darkmod]</h1>
+<p>The pfUI-darkmod is an example pfUI module that statically configures pfUI. Its purpose is for developers who want to modify pfUI without changing the addon core itself. This addon and its source-code are intended to give developers an idea of how to use the API, hook functions and change basic alignments of pfUI.</p>
+
+<p>If you're not a developer on your own but like the darkmod as is, feel free to use it. But be aware that you are out of support and on your own.</p>
+
+<p>Since this addon force-overwrites options, functions and positions that are usually set by pfUI, you might not be able to use those options within the pfUI settings dialog anymore without troubles.</p>
+
+<h2>Screenshots</h2>
+<p><img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI-darkmod/castbar.jpg" align="right" width="48.87%">
+<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI-darkmod/solo.jpg" width="48.87%">
+<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI-darkmod/group.jpg" align="right" width="48.87%">
+<img src="https://raw.githubusercontent.com/shagu/ShaguAddons/master/_img/pfUI-darkmod/raidloot.jpg" width="48.87%"></p>
+
+<h2>Dependency</h2>
+<p>You need to have pfUI installed. Learn more how to download &amp; install pfUI <a href="https://shagu.org/pfUI">HERE</a>.</p>
+
+<h2>Installation</h2>
+<p>1. Download <strong><a href="https://github.com/shagu/pfUI-darkmod/archive/master.zip">Latest Version</a></strong>
+2. Unpack the Zip file
+3. Rename the folder "pfUI-darkmod-master" to "pfUI-darkmod"
+4. Copy "pfUI-darkmod" into Wow-Directory\Interface\AddOns
+5. Make sure to have your screen resolution set to <strong>"1920x1080"</strong> (*)
+6. Restart Wow Client
+7. Select and Load the "pfUI darkmod" profile inside the pfUI settings</p>
+
+<p>*) If you have another screen resolution, you might have to adjust the UIScale on your own to have everything fit together</p>
+
+<h2>Supported Addons</h2>
+<p>* <a href="https://github.com/Geigerkind/DPSMate">DPSMate</a> A Combat Analyzation Tool
+* <a href="http://addons.us.to/addon/klhthreatmeter-0">KLHThreatMeter (KTM)</a> A Threat Meter</p>
+
+<h2>What is it doing?</h2>
+<h4>Move Chat Frames</h4>
+<p>* Move left chat to the bottom-left without padding.
+* Move right chat to the bottom-right without padding.</p>
+
+<h4>Draw Dark Bottom Line</h4>
+<p>* add a black gradient to the bottom and stretch it up to the chat-tab-bar.</p>
+
+<h4>Strech Viewport</h4>
+<p>* stretch the viewport by cutting off a few pixels at the bottom to not have the bottom gradient eat too much space and have the character more centered.</p>
+
+<h4>Autosize and Move Chat Input Box</h4>
+<p>* make chatinput box fit between chat docks.</p>
+
+<h4>Autosize and Move Castbar</h4>
+<p>* make the castbar fit between both chat docks.
+* move the target castbar into the center of the screen.</p>
+
+<h4>Autosize and Move XP/Reputation</h4>
+<p>* adjust xp and reputation bar height.</p>
+
+<h4>Move Buffs</h4>
+<p>* move buffs to the topright of the screen.</p>
+
+<h4>Autosize and Move Minimap</h4>
+<p>* move the minimap to the center bottom.</p>
+
+<h4>Move Actionbars</h4>
+<p>* move the main actionbar bar to the minimap.
+* move the top actionbar above the main actionbar.
+* move the left actionbar to the right of minimap.
+* move the right actionbar above the left actionbar.
+* set the position of the shapeshift/stance bars to the right of the screen.
+* set the position of the petactionbars to the right of the screen.</p>
+
+<h4>Move UnitFrames</h4>
+<p>* move the playerframe above the left actionbars.
+* move the targetframe above the right actionbars.
+* move the targettargetframe above the minimap.
+* move the pet unitframe slightly higher to not have it collide with the castbar.
+* set the position of all raidframes to the top of the left chat panel.
+* set the position of all groupframes to the top of the left chat panel.</p>
+
+<h4>Merge Tracking Icon Into Chat-Tab</h4>
+<p>* move/merge the tracking icon into the right chattab panel.
+* also set its parent to make it vanish when the meters are shown.</p>
+
+<h4>Move Loot Rolls</h4>
+<p>* set the position of all loot rolls to the top of the right chat panel.
+* also decrease the spacing and make the width same as the panel.</p>
+
+<h4>Create Top Panel Background</h4>
+<p>* create a backdrop of the size and appearance of a chat tab dock.
+* make the new backdrop toggle when the meters are shown by hooking the</p>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

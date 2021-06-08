@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../">welcome!</a> » <a href="../">Hardware</a> » <span>Cubox i4 Pro</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="cubox-i4-pro.md" class="text">
+<h1>Cubox-i4 Pro</h1>
+
+<h2>Prepare</h2>
+<p>build the toolchain:</p>
+
+<pre><code>crossdev -S armv7a-hardfloat-linux-gnueabi
+</code></pre>
+
+<h2>SD-Card</h2>
+<p>make sure the first partition has an offset of 1MB otherwise the bootloader will destroy your first partition.</p>
+
+<pre><code>cfdisk /dev/mmcblk0
+mkfs.ext4 /dev/mmcblk0p1
+#mkfs.ext4 -O ^has_journal -E stride=2,stripe-width=1024 -b 4096 /dev/sdX1
+</code></pre>
+
+<h2>Gentoo</h2>
+<p>source: <a href="http://distfiles.gentoo.org/releases/arm/autobuilds/current-stage3-armv7a_hardfp/">current-stage3-armv7a_hardfp</a></p>
+
+<pre><code>tar xfjp stage3-armv7a_hardfp-*.tar.bz2 -C /mnt/mmcblk0p1
+openssl passwd -1
+# add the hash to your /mnt/mmcblk0p1/etc/shadow
+</code></pre>
+
+<h2>Serial Login (inittab)</h2>
+
+<pre><code>s0:12345:respawn:/sbin/agetty -L 115200 ttymxc0 vt100
+</code></pre>
+
+<h2>u-boot</h2>
+
+<pre><code>git clone https://github.com/SolidRun/u-boot-imx6.git
+cd u-boot-imx6
+export ARCH=arm
+export CROSS_COMPILE=/usr/bin/armv7a-hardfloat-linux-gnueabi-
+make mx6_cubox-i_config
+make
+</code></pre>
+
+<p>files:</p>
+
+<pre><code>- SPL
+- u-boot.img
+</code></pre>
+
+<p>uEnv.txt:</p>
+
+<pre><code>bootfile=/boot/uImage
+mmcargs=setenv bootargs root=/dev/mmcblk0p1 rootwait video=mxcfb0:dev=hdmi consoleblank=0 console=ttymxc0,115200
+</code></pre>
+
+<p>install:</p>
+
+<pre><code>dd if=SPL of=/dev/mmcblk0 bs=1K seek=1
+dd if=u-boot.img of=/dev/mmcblk0 bs=1K seek=42
+cp uEnv.txt /mnt/mmcblk0p1
+</code></pre>
+
+<h2>Kernel</h2>
+
+<pre><code>export ARCH=arm
+export CROSS_COMPILE=/usr/bin/armv7a-hardfloat-linux-gnueabi-
+git clone https://github.com/SolidRun/linux-imx6.git
+cd linux-imx6
+make imx6_cubox-i_hummingboard_defconfig
+make uImage
+make modules
+
+# install
+INSTALL_MOD_PATH=/mnt/mmcblk0p1 make modules_install
+mkdir /mnt/mmcblk0p1/boot
+cp arch/arm/boot/uImage /mnt/mmcblk0p1/boot
+</code></pre>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

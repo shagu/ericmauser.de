@@ -1,0 +1,342 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../">welcome!</a> » <a href="../">Hardware</a> » <span>Sony Xperia Z1 Compact</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="aicp.md" class="text">
+<h1>Build AICP for Xperia Z1 Compact</h1>
+<p>Build instructions to compile AICP from scratch, using a reproducable lxc container setup. This guide is dedicated for the Xperia Z1 Compact device, which is also known as <code>amami</code> or <code>d5503</code>. It will use <code>ubuntu</code> as an LXC container, so your host system does not matter as long as it has <code>lxc</code> installed properly. Ubuntu is the choice here, because it's the preferred distribution in the Sony Xperia AOSP build instructions and also in the official AOSP documentation.</p>
+
+<h2>Setup LXC container</h2>
+<p>Create an LXC container with ubuntu installed. If xenial is not used by default, pass <code>-- -r xenial</code> to the <code>lxc-create</code> command.</p>
+
+<pre><code>lxc-create -n aicp -t ubuntu
+</code></pre>
+
+<p>Change container config to use the host network</p>
+
+<pre><code>sed -i "s/lxc.network.type = empty/lxc.network.type = none/g" /var/lib/lxc/aicp/config
+</code></pre>
+
+<p>Start and attach the new session</p>
+
+<pre><code>lxc-start  -n aicp
+lxc-attach -n aicp
+</code></pre>
+
+<p>If the container does not receive any default nameserver, add a default nameserver on every login and re-attach the container.</p>
+
+<pre><code>echo 'echo "nameserver 8.8.8.8" &gt; /etc/resolv.conf' &gt;&gt; /root/.bashrc &amp;&amp; exit
+lxc-attach -n aicp
+</code></pre>
+
+<h2>Setup Ubuntu</h2>
+<p>Update all packages and install the required build dependencies.</p>
+
+<pre><code>apt-get update &amp;&amp; apt-get upgrade
+apt-get install bc bison bsdmainutils build-essential curl flex gcc-multilib \
+    git g++-multilib gnupg gperf imagemagick lib32ncurses5-dev lib32readline6-dev \
+    lib32z1-dev libesd0-dev liblz4-tool libncurses5-dev libsdl1.2-dev libssl-dev \
+    libwxgtk3.0-dev libxml2 libxml2-utils lzop make openjdk-8-jdk pngcrush repo \
+    rsync schedtool squashfs-tools xsltproc zip zlib1g-dev
+</code></pre>
+
+<h2>Setup the Build Environment</h2>
+<p>Add a build user and initialize all git repositories.</p>
+
+<pre><code>adduser build
+su -l build
+
+git config --global user.email "build@aicp"
+git config --global user.name "Build User"
+
+repo init -u https://github.com/AICP/platform_manifest.git -b n7.1
+</code></pre>
+
+<h2>Download</h2>
+
+<pre><code>repo sync
+</code></pre>
+
+<h2>Compile</h2>
+
+<pre><code>. build/envsetup.sh
+brunch
+</code></pre>
+
+</div><div id="aosp.md" class="text">
+<h1>Build AOSP for Xperia Z1 Compact</h1>
+<p>Build instructions to compile AOSP from scratch, using a reproducable lxc container setup. This guide is dedicated for the Xperia Z1 Compact device, which is also known as <code>amami</code> or <code>d5503</code>. It will use <code>ubuntu</code> as an LXC container, so your host system does not matter as long as it has <code>lxc</code> installed properly. Ubuntu is the choice here, because it's the preferred distribution in the Sony Xperia AOSP build instructions and also in the official AOSP documentation.</p>
+
+<h2>Setup LXC container</h2>
+<p>Create an LXC container with ubuntu installed. If xenial is not used by default, pass <code>-- -r xenial</code> to the <code>lxc-create</code> command.</p>
+
+<pre><code>lxc-create -n aosp -t ubuntu
+</code></pre>
+
+<p>Change container config to use the host network</p>
+
+<pre><code>sed -i "s/lxc.network.type = empty/lxc.network.type = none/g" /var/lib/lxc/aosp/config
+</code></pre>
+
+<p>Start and attach the new session</p>
+
+<pre><code>lxc-start  -n aosp
+lxc-attach -n aosp
+</code></pre>
+
+<p>If the container does not receive any default nameserver, add a default nameserver on every login and re-attach the container.</p>
+
+<pre><code>echo 'echo "nameserver 8.8.8.8" &gt; /etc/resolv.conf' &gt;&gt; /root/.bashrc &amp;&amp; exit
+lxc-attach -n aosp
+</code></pre>
+
+<h2>Setup Ubuntu</h2>
+<p>Update all packages and install the required build dependencies.</p>
+
+<pre><code>apt-get update &amp;&amp; apt-get upgrade
+apt-get install openjdk-8-jdk build-essential lzop bc bison g++-multilib git \
+    gperf libxml2-utils make zlib1g-dev zip repo vim
+</code></pre>
+
+<h2>Setup the Build Environment</h2>
+<p>Add a build user and initialize all git repositories.</p>
+
+<pre><code>adduser build
+su -l build
+
+git config --global user.email "build@aosp"
+git config --global user.name "Build User"
+
+repo init -u https://android.googlesource.com/platform/manifest -b android-7.1.2_r29
+</code></pre>
+
+<p>Add sony's custom manifest which contains specific data for xperia devices.</p>
+<pre><code>cd .repo
+git clone https://github.com/sonyxperiadev/local_manifests
+cd local_manifests
+git checkout n-mr1_3.10
+cd ~
+</code></pre>
+
+<p>Grab the Sony AOSP binaries and place them in ~/ of your build user. The binaries can be found on the official sonyxperiadev website: <a href="https://developer.sonymobile.com/open-devices/list-of-devices-and-resources/">Download AOSP Binararies for Xperia Devices</a></p>
+
+<pre><code>unzip SW_binaries_for_Xperia_AOSP_*.zip
+</code></pre>
+
+<p>Apply the requried changes on the aosp source tree as sony recommends us.</p>
+
+<pre><code>cd external/toybox
+git fetch https://android.googlesource.com/platform/external/toybox refs/changes/74/265074/1 &amp;&amp; git cherry-pick FETCH_HEAD
+git cherry-pick d3e8dd1bf56afc2277960472a46907d419e4b3da
+git cherry-pick 1c028ca33dc059a9d8f18daafcd77b5950268f41
+git cherry-pick cb49c305e3c78179b19d6f174ae73309544292b8
+
+cd ../../hardware/qcom/audio
+git fetch https://android.googlesource.com/platform/hardware/qcom/audio refs/changes/91/294291/1 &amp;&amp; git cherry-pick FETCH_HEAD
+git fetch https://android.googlesource.com/platform/hardware/qcom/audio refs/changes/35/274235/9 &amp;&amp; git cherry-pick FETCH_HEAD
+git fetch https://android.googlesource.com/platform/hardware/qcom/audio refs/changes/86/333386/1 &amp;&amp; git cherry-pick FETCH_HEAD
+
+cd ../display
+git revert --no-edit 51b4299f42c61d3a919c8e86c38a85f40902226b
+git revert --no-edit b7d1a389b00370fc9d2a7db1268ce26271ead7e2
+git revert --no-edit f026d04dde743a0524235ae57e2ce8ac5364d44b
+git revert --no-edit 3261eb2236252f9f2510c008fad451411a780b3b
+git fetch https://android.googlesource.com/platform/hardware/qcom/display refs/changes/54/274454/1 &amp;&amp; git cherry-pick FETCH_HEAD
+git fetch https://android.googlesource.com/platform/hardware/qcom/display refs/changes/55/274455/1 &amp;&amp; git cherry-pick FETCH_HEAD
+
+cd ../keymaster
+git revert --no-edit 583ecf5ed2a4be0d05229b8c6726680c3836be8b
+git fetch https://android.googlesource.com/platform/hardware/qcom/keymaster refs/changes/70/212570/5 &amp;&amp; git cherry-pick FETCH_HEAD
+git fetch https://android.googlesource.com/platform/hardware/qcom/keymaster refs/changes/80/212580/2 &amp;&amp; git cherry-pick FETCH_HEAD
+
+cd ../../../system/core
+git fetch https://android.googlesource.com/platform/system/core refs/changes/52/269652/1 &amp;&amp; git cherry-pick FETCH_HEAD
+git fetch https://android.googlesource.com/platform/system/core refs/changes/12/373812/1 &amp;&amp; git cherry-pick FETCH_HEAD
+
+cd ../../packages/apps/Music
+git cherry-pick 6036ce6127022880a3d9c99bd15db4c968f3e6a3
+
+cd ../../../frameworks/av
+git fetch https://android.googlesource.com/platform/frameworks/av refs/changes/69/343069/1 &amp;&amp; git cherry-pick FETCH_HEAD
+git fetch https://android.googlesource.com/platform/frameworks/av refs/changes/70/343070/1 &amp;&amp; git cherry-pick FETCH_HEAD
+git fetch https://android.googlesource.com/platform/frameworks/av refs/changes/71/343071/1 &amp;&amp; git cherry-pick FETCH_HEAD
+cd ../../
+</code></pre>
+
+<p>Add proprietary blobs to get the modem working (gsm/umts/lte/4g)</p>
+
+<pre><code>git clone "https://github.com/SonyAosp/vendor_qcom_firmware" vendor/qcom/firmware
+</code></pre>
+
+<h2>Download</h2>
+<p>This will download up to 50GB of source code. Have a break ;)</p>
+
+<pre><code>repo sync
+</code></pre>
+
+<p>In case you already messed something up, you might want to use the forced mode instead.</p>
+
+<pre><code>repo sync --force-sync
+</code></pre>
+
+<h2>Optional - Add/Remove Apps</h2>
+<p>This is an example on how to include LineageOS apps or remove any apps during the build process.</p>
+
+<pre><code>cd packages/apps
+git clone https://github.com/LineageOS/android_packages_apps_Browser.git Browser
+git clone https://github.com/LineageOS/android_packages_apps_CMFileManager.git CMFileManager
+cd
+
+cd external
+git clone https://github.com/LineageOS/android_external_libtruezip.git libtruezip
+git clone https://github.com/LineageOS/android_external_cyanogen_UICommon.git UICommon
+</code></pre>
+
+<p>Add <code>Browser</code>, <code>CMFileManager</code> to <code>PRODUCT_PACKAGES</code> and/or remove <code>Browser2</code>, <code>Launcher2</code> and <code>QuickSearchBar</code> if you don't want to use them.</p>
+
+<pre><code>vim build/target/product/core.mk
+</code></pre>
+
+<h2>Rebuild the Kernel</h2>
+<p>Sony uses a prebuild Kernel per default, but this kernel won't boot any amami device. We need to remove the prebuilt in order recompile a working one.</p>
+
+<pre><code>rm -r device/sony/common-kernel
+</code></pre>
+
+<h2>Compile</h2>
+<p>Replace <code>-j4</code> with the number of the CPU Cores you have.</p>
+
+<pre><code>. build/envsetup.sh
+lunch
+make -j4 otapackage
+</code></pre>
+
+<h2>Flash</h2>
+<p>In case the update.zip won't work due to a broken recovery image, just flash the raw data directly via fastboot.</p>
+
+<pre><code>fastboot –S 256M flash boot out/target/product/&lt;device&gt;/boot.img
+fastboot –S 256M flash system out/target/product/&lt;device&gt;/system.img
+fastboot –S 256M flash userdata out/target/product/&lt;device&gt;/userdata.img
+fastboot –S 256M flash recovery out/target/product/&lt;device&gt;/recovery.img
+</code></pre>
+
+</div><div id="lineageos.md" class="text">
+<h1>Build LineageOS for Xperia Z1 Compact</h1>
+<p>Build instructions to compile LineageOS from scratch, using a reproducable lxc container setup. This guide is dedicated for the Xperia Z1 Compact device, which is also known as <code>amami</code> or <code>d5503</code>. It will use <code>ubuntu</code> as an LXC container, so your host system does not matter as long as it has <code>lxc</code> installed properly. Ubuntu is the choice here, because it's the preferred distribution in the Sony Xperia AOSP build instructions and also in the official AOSP documentation.</p>
+
+<h2>Setup LXC container</h2>
+<p>Create an LXC container with ubuntu installed. If xenial is not used by default, pass <code>-- -r xenial</code> to the <code>lxc-create</code> command.</p>
+
+<pre><code>lxc-create -n lineage -t ubuntu
+</code></pre>
+
+<p>Change container config to use the host network</p>
+
+<pre><code>sed -i "s/lxc.network.type = empty/lxc.network.type = none/g" /var/lib/lxc/lineage/config
+</code></pre>
+
+<p>Start and attach the new session</p>
+
+<pre><code>lxc-start  -n lineage
+lxc-attach -n lineage
+</code></pre>
+
+<p>If the container does not receive any default nameserver, add a default nameserver on every login and re-attach the container.</p>
+
+<pre><code>echo 'echo "nameserver 8.8.8.8" &gt; /etc/resolv.conf' &gt;&gt; /root/.bashrc &amp;&amp; exit
+lxc-attach -n lineage
+</code></pre>
+
+<h2>Setup Ubuntu</h2>
+<p>Update all packages and install the required build dependencies.</p>
+
+<pre><code>apt-get update &amp;&amp; apt-get upgrade
+apt-get install bc bison bsdmainutils build-essential curl flex gcc-multilib \
+    git g++-multilib gnupg gperf imagemagick lib32ncurses5-dev lib32readline6-dev \
+    lib32z1-dev libesd0-dev liblz4-tool libncurses5-dev libsdl1.2-dev libssl-dev \
+    libwxgtk3.0-dev libxml2 libxml2-utils lzop make openjdk-8-jdk pngcrush repo \
+    rsync schedtool squashfs-tools xsltproc zip zlib1g-dev
+</code></pre>
+
+<h2>Setup the Build Environment</h2>
+<p>Add a build user and initialize all git repositories.</p>
+
+<pre><code>adduser build
+su -l build
+
+git config --global user.email "build@lineage"
+git config --global user.name "Build User"
+
+repo init -u https://github.com/LineageOS/android.git -b cm-14.1
+</code></pre>
+
+<p>Copy <a href="los_amami.xml">los_amami.xml</a> into the <code>local_manifests</code> directory to add support for amami (Xperia Z1 Compact) devices.</p>
+
+<pre><code>mkdir .repo/local_manifests
+mv los_amami.xml .repo/local_manifests
+</code></pre>
+
+<p>Grab the Sony AOSP binaries and place them in ~/ of your build user. The binaries can be found on the official sonyxperiadev website: <a href="https://developer.sonymobile.com/open-devices/list-of-devices-and-resources/">Download AOSP Binararies for Xperia Devices</a></p>
+
+<pre><code>unzip SW_binaries_for_Xperia_AOSP_*.zip
+</code></pre>
+
+<h2>Download</h2>
+<p>This will download up to 50GB of source code. Have a break ;)</p>
+
+<pre><code>repo sync
+</code></pre>
+
+<p>In case you already messed something up, you might want to use the forced mode instead.</p>
+
+<pre><code>repo sync --force-sync
+</code></pre>
+
+<h2>Compile</h2>
+<p>Replace <code>-j4</code> with the number of the CPU Cores you have and <code>12G</code> with the amount of RAM you would like to use during the build. Set <code>-M 50G</code> to the amount of storage that ccache is allowed to use.</p>
+
+<pre><code>export USE_CCACHE=1
+export ANDROID_JACK_VM_ARGS="-Dfile.encoding=UTF-8 -XX:+TieredCompilation -Xmx12G"
+prebuilts/misc/linux-x86/ccache/ccache -M 50G
+
+. build/envsetup.sh
+lunch lineage_amami-userdebug
+make bacon -j4
+</code></pre>
+
+<h2>Troubleshooting</h2>
+<p>If you encounter any <code>ninja_wrapper</code> errors, disable ninja and try to build again.</p>
+
+<pre><code>export USE_NINJA=false
+</code></pre>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

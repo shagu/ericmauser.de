@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../../../">welcome!</a> » <a href="../../../">Projects</a> » <a href="../../">wow-addons</a> » <a href="../">ShaguQuest</a> » <span>database</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a><a class="sidelink" href="maps/">maps</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="README.md" class="text">
+<h1>Fetch Databases</h1>
+
+<h3>ClassicDB: (Core Entries)</h3>
+<pre><code>git clone https://github.com/cmangos/classic-db.git classicdb
+</code></pre>
+
+<h3>Elysium: (Translations)</h3>
+<pre><code>git clone https://github.com/elysium-project/database.git elysiumdb
+</code></pre>
+
+<h1>Create Database Structure</h1>
+<pre><code>CREATE USER 'mangos'@'localhost' IDENTIFIED BY 'mangos';
+CREATE DATABASE `mangos` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+CREATE DATABASE `elysium` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, LOCK TABLES, CREATE TEMPORARY TABLES, EXECUTE, ALTER ROUTINE, CREATE ROUTINE ON `mangos`.* TO 'mangos'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, CREATE, DROP, ALTER, LOCK TABLES, CREATE TEMPORARY TABLES, EXECUTE, ALTER ROUTINE, CREATE ROUTINE ON `elysium`.* TO 'mangos'@'localhost';
+</code></pre>
+
+<h1>Import Databases</h1>
+<pre><code>mysql -u mangos -p mangos -h 127.0.0.1 &lt; classicdb/Full_DB/ClassicDB*.sql
+mysql -u mangos -p elysium -h 127.0.0.1 &lt; elysiumdb/world_full_02032017.sql
+mysql -u mangos -p mangos -h 127.0.0.1 &lt; aowow.sql
+</code></pre>
+
+<h1>Extract Data</h1>
+<h3>Extract Specific Localizations (3=german)</h3>
+
+<pre><code>./itemDB.php 3
+./questDB.php 3
+./vendorDB.php 3
+./spawnDB.php 3
+./zoneDB.php 3
+</code></pre>
+
+<h3>Build Every Database</h3>
+
+<pre><code>./itemDB.php
+./questDB.php
+./vendorDB.php
+./spawnDB.php
+./zoneDB.php
+</code></pre>
+
+<p>or</p>
+
+<pre><code>make db
+</code></pre>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

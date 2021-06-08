@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <!-- replace mainline components by vendor forks -->
+  <remove-project name="LineageOS/android_hardware_qcom_audio" />
+  <remove-project name="LineageOS/android_hardware_qcom_display" />
+  <remove-project name="LineageOS/android_hardware_qcom_fm" />
+  <remove-project name="LineageOS/android_hardware_qcom_media" />
+  <remove-project name="LineageOS/android_packages_apps_FMRadio" />
+
+  <!-- imports from Sony LineageOS Project -->
+  <project name="SonyLOS/android_hardware_qcom_audio" path="hardware/qcom/audio/default" remote="github" revision="cm-14.1" />
+  <project name="SonyLOS/android_hardware_qcom_display" path="hardware/qcom/display" remote="github" revision="cm-14.1" />
+  <project name="SonyLOS/android_hardware_qcom_media" path="hardware/qcom/media" remote="github" revision="cm-14.1" />
+  <project name="SonyLOS/android_device_sony_common-aosp" path="device/sony/common-aosp" remote="github" revision="cm-14.1" />
+  <project name="SonyLOS/android_device_sony_kitakami-common" path="device/sony/kitakami-common" remote="github" revision="cm-14.1" />
+  <project name="SonyLOS/android_device_sony_satsuki" path="device/sony/satsuki" remote="github" revision="cm-14.1" />
+  <project name="SonyLOS/android_device_sony_satsuki_dsds" path="device/sony/satsuki_dsds" remote="github" revision="cm-14.1" />
+  <project name="SonyLOS/android_device_sony_rhine-common" path="device/sony/rhine-common" remote="github" revision="cm-14.1" />
+  <project name="SonyLOS/android_device_sony_honami" path="device/sony/honami" remote="github" revision="cm-14.1" />
+  <project name="SonyLOS/android_device_sony_shinano-common" path="device/sony/shinano-common" remote="github" revision="cm-14.1" />
+  <project name="SonyLOS/android_device_sony_z3" path="device/sony/z3" remote="github" revision="cm-14.1" />
+  <project name="SonyLOS/android_kernel_sony_msm" path="kernel/sony/msm" remote="github" revision="cm-14.1" />
+  <project name="SonyLOS/android_hardware_sony_camera" path="hardware/sony/camera" remote="github" revision="cm-14.1" />
+
+  <!-- imports from LineageOS Project -->
+  <project name="LineageOS/android_device_sony_common" path="device/sony/common" remote="github" revision="cm-14.1" />
+  <project name="LineageOS/android_hardware_sony_thermanager" path="hardware/sony/thermanager" remote="github" revision="cm-14.1" />
+  <project name="LineageOS/android_hardware_sony_timekeep" path="hardware/sony/timekeep" remote="github" revision="cm-14.1" />
+  <project name="LineageOS/android_hardware_sony_macaddrsetup" path="hardware/sony/macaddrsetup" remote="github" revision="cm-14.1" />
+
+  <!-- imports from official Sony Xperia GitHub -->
+  <project name="sonyxperiadev/packages-apps-FMRadio" path="packages/apps/FMRadio" remote="github" revision="master" />
+  <project name="sonyxperiadev/device-sony-sepolicy" path="device/sony/sepolicy" remote="github" revision="n-mr0" />
+  <project name="sonyxperiadev/vendor-qcom-opensource-fm" path="hardware/qcom/fm" remote="github" revision="master" />
+  <project name="sonyxperiadev/vendor-qcom-opensource-dataservices" path="hardware/sony/dataservices" remote="github" revision="master" />
+
+  <!-- add proprietary modem blobs -->
+  <project name="SonyAosp/vendor_qcom_firmware" path="vendor/qcom/firmware" remote="github" revision="android-7.0" />
+
+  <!-- add the LOSified fork of sonyxperiadev/device_sony_amami -->
+  <project name="derfelot/android_device_sony_amami_los14.1" path="device/sony/amami" remote="github" revision="cm-14.1" />
+</manifest>
+

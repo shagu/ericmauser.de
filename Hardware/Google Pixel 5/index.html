@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../">welcome!</a> » <a href="../">Hardware</a> » <span>Google Pixel 5</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="aosp-redfin-pixel5.md" class="text">
+<h1>Google Pixel 5 (redfin)</h1>
+
+<h2>AOSP Build (Ubuntu 18.04)</h2>
+
+<h3>Setup LXC Build Container</h3>
+
+<pre><code>lxc-create aosp -t download -- -d ubuntu -r bionic -a amd64
+sed -i "s/lxc.net.0.type = empty/lxc.net.0.type = none/g" /var/lib/lxc/aosp/config
+
+lxc-start aosp
+lxc-attach aosp
+
+echo 'echo "nameserver 8.8.8.8" &gt; /etc/resolv.conf' &gt;&gt; /root/.bashrc &amp;&amp; exit
+lxc-attach aosp
+</code></pre>
+
+<h3>Install Dependencies</h3>
+
+<pre><code>sudo apt-get update
+sudo apt-get install rsync git-core gnupg flex bison build-essential zip curl zlib1g-dev gcc-multilib g++-multilib libncurses5 libc6-dev-i386 lib32ncurses5-dev x11proto-core-dev libx11-dev lib32z1-dev libgl1-mesa-dev libxml2-utils xsltproc unzip fontconfig python2.7 repo android-sdk-platform-tools-common vim
+sudo gpasswd -a ubuntu plugdev
+</code></pre>
+
+<h3>Prepare User</h3>
+
+<pre><code>git config --global user.name "Bob Builder"
+git config --global user.email "build@example.org"
+</code></pre>
+
+<h3>Fetch sources</h3>
+
+<p>Check google's build numbers to identify the best tag for pixel 5: <a href="https://source.android.com/setup/start/build-numbers">Codenames, Tags, and Build Numbers</a></p>
+
+<pre><code>mkdir aosp; cd aosp
+repo init -u https://android.googlesource.com/platform/manifest -b android-11.0.0_r14
+repo sync -q -c -j8
+</code></pre>
+
+<h3>Get the Binaries</h3>
+
+<p>The latest version of the binaries can be found on the <a href="https://developers.google.com/android/drivers">Driver Binaries</a> page.
+At the time of writing, this is <code>RD1A.201105.003.B1</code> for EU according to <a href="https://support.google.com/pixelphone/thread/80591482?hl=en">this post</a>.</p>
+
+<pre><code>curl https://dl.google.com/dl/android/aosp/google_devices-redfin-rd1a.201105.003.b1-5dbe21dd.tgz | tar xvz
+./extract-google_devices-redfin.sh
+
+curl https://dl.google.com/dl/android/aosp/qcom-redfin-rd1a.201105.003.b1-675b4528.tgz | tar xvz
+./extract-qcom-redfin.sh
+
+git clone https://github.com/shagu/pixelmod/ vendor/pixelmod
+</code></pre>
+
+
+<h3>Configure Environment</h3>
+
+<pre><code>source build/envsetup.sh
+vendor/pixelmod/redfin/enable.sh
+lunch aosp_redfin-userdebug
+</code></pre>
+
+<h3>Build</h3>
+
+<pre><code>m dist
+m fastboot adb
+</code></pre>
+
+<h3>Flash</h3>
+
+<p>Stock ROM: <a href="https://developers.google.com/android/images">Download Page</a> (<a href="https://dl.google.com/dl/android/aosp/redfin-rd1a.200810.020-factory-c3ea1715.zip">Direct Download</a>)</p>
+
+<p>To enable OEM unlocking on the device:
+  - In Settings, tap About phone, then tap Build number seven times.
+  - When you see the message You are a developer, tap the back button.
+  - Tap Developer options and enable OEM unlocking and USB debugging.</p>
+
+<p>Turn off the phone, press and hold Volume Down, then press and hold Power.</p>
+
+<pre><code>fastboot flashing unlock
+</code></pre>
+
+<p>Flash all images:</p>
+
+<pre><code>export ANDROID_PRODUCT_OUT=/home/lxc/aosp/rootfs/home/ubuntu/aosp/out/target/product/redfin
+fastboot flashall -w --skip-reboot
+</code></pre>
+
+<p>Lock bootloader again:</p>
+
+<pre><code>fastboot flashing lock
+</code></pre>
+
+<h2>Notes/Hints</h2>
+
+<h3>Building on Archlinux (Unstable)</h3>
+
+<p>The build requires ncruses5 which is no longer in the arch repositorys. It's possible to use the prebuild library that
+is shipped with the aosp sources or to install <a href="https://aur.archlinux.org/packages/ncurses5-compat-libs/">ncurses5-compat-libs (AUR)</a>.</p>
+
+<pre><code>pacman -S base-devel multilib-devel gcc repo git gnupg gperf sdl wxgtk2 squashfs-tools curl ncurses zlib schedtool perl-switch zip unzip libxslt bc rsync ccache lib32-zlib lib32-ncurses lib32-readline
+cp prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8/sysroot/usr/lib/libncurses.so.5 /lib/libncurses.so.5
+</code></pre>
+
+<h3>Additional Flash Commands</h3>
+<p>Flash image zip via fastboot file:</p>
+
+<pre><code>fastboot -w update aosp_redfin-img-eng.ubuntu.zip
+</code></pre>
+
+<p>Flash otau update via adb/recovery:</p>
+
+<pre><code>adb sideload aosp_redfin-ota-eng.ubuntu.zip
+</code></pre>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

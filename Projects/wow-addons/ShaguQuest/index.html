@@ -1,0 +1,93 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../../">welcome!</a> » <a href="../../">Projects</a> » <a href="../">wow-addons</a> » <span>ShaguQuest</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a><a class="sidelink" href="database/">database</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="README.md" class="text">
+<h1>Abandoned</h1>
+<p><strong>This project is dead and has been superseeded by <a href="https://github.com/shagu/pfQuest">pfQuest</a></strong></p>
+
+<h2>ShaguDB</h2>
+<p>ShaguDB is a database Addon for World of Warcraft Vanilla (1.12.1) Clients.
+It includes a huge amount of data which contains spawn,drop and quest stuff.</p>
+
+<p>This data can be used to display all kind of informations on your map (Cartographer required).
+The following command will display all "Gold Ores" on your map.
+This can be used for all kind of NPCs or gameobjects too.</p>
+
+<pre><code>    /shagu spawn Gold Ore
+</code></pre>
+
+<p>If you are interested in displaying some drop informations, try out the following,
+it will display all kind of mobs, treasures and so on which the item can be obtained from.</p>
+
+<pre><code>    /shagu item Black Pearl
+</code></pre>
+
+<p>With version 5.0 a new feature was introduced. The "vendor" command.</p>
+
+<pre><code>    /shagu vendor Jagged Arrow
+</code></pre>
+
+<p>Will display all vendors selling "Jagged Arrow".</p>
+
+<p>Additionally ShaguDB includes a (poor) quest integration via ShaguQuest (Extended QuestLog).
+On every quest you'll see a "Show" button, which will display all known questrelated stuff on your map.
+The "Clean" button removes every ShaguDB note from the map.</p>
+
+<p>Due to classic Wow-API restrictions, this Addon is only available for enGB and deDE clients.</p>
+
+<p>It is based on the latest Mangos Zero Database, as well as GMDB.
+Some parts of the Addon itself are taken from the WHDB Addon. ShaguQuest is basically EQL3 with a few modifications.</p>
+
+<h2>Video</h2>
+<p>If you want to see it in Action, here is a example video, showing the most common features of ShaguDB</p>
+
+<p><a href="https://www.youtube.com/watch?v=SYrCEI_2Axg"><img src="https://img.youtube.com/vi/SYrCEI_2Axg/0.jpg" alt="Youtube Video"/></a></p>
+
+<h2>Download</h2>
+<p><strong>This project is dead and won't receive any updates and bugfixes</strong></p>
+
+<p>If you want to check it out anyhow, have a look at the release page:</p>
+
+<p><a href="https://github.com/shagu/ShaguQuest/releases">Github Releases</a></p>
+
+<h2>Build it Yourself</h2>
+<p>If you're running a Linux Machine:</p>
+
+<pre><code>$ git clone https://github.com/shagu/ShaguQuest
+$ cd ShaguQuest
+$ make
+</code></pre>
+
+<p>After that, all Addons will be built and can then be found in the directory: <em>./releases</em></p>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>

@@ -1,0 +1,59 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="just some random notes" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:100,300&display=swap" rel="stylesheet" />
+  <link href="../../../style.css" rel="stylesheet" />
+  <title>ericmauser - just some random notes</title>
+</head>
+
+<body>
+  <div class="sidebar">
+    <div class="viewport">
+      <div class="topbar">
+        <a class="title" href="../../../">ericmauser</a>
+        <span class="description">just some random notes</span>
+      </div>
+      <div class="navigation"><a href="../../../">welcome!</a> » <a href="../../">Projects</a> » <a href="../">arkham-gtk-theme</a> » <span>docs</span></div>
+    </div>
+  </div>
+
+  <div class="viewport mainview">
+    <div class="directories">
+      <a class="back sidelink" href="../">« Back</a>
+    </div>
+    <div class="page">
+      <div class="content"><div id="extract-gresource.md" class="text">
+<h1>Get Original Theme Data</h1>
+
+<p>Adwaita has moved its data into a so called "gresource" file and is now shipped directly bundled with GTK. To extract the theme file itself, it is required grab it out of the resource file. This can be done by issueing the following command:</p>
+
+<h2>Default theme</h2>
+
+<pre><code>    gresource extract /usr/lib/libgtk-3.so /org/gtk/libgtk/theme/Adwaita/gtk-contained.css
+</code></pre>
+
+<h2>Dark theme</h2>
+
+<pre><code>    gresource extract /usr/lib/libgtk-3.so /org/gtk/libgtk/theme/Adwaita/gtk-contained-dark.css
+</code></pre>
+
+</div><div id="gtk-theme-inspector.md" class="text">
+<h1>GTK+ Inspector</h1>
+
+<p>The GTK+ Inspector can be used to identify the elements of a GTK window and the corresponding name. Those names and classes are required to be able to adjust their appearance via the gtk stylesheet/theme. This tool is disabled by default but can be enabled via gsettings:</p>
+
+<pre><code>    gsettings set org.gtk.Settings.Debug enable-inspector-keybinding true
+</code></pre>
+
+<p>Once it has been enabled, it can be shown by pressing <Ctrl> + <Shift> + D or <Ctrl> + <Shift> + I to automatically select the widget under the mouse pointer.</p>
+
+</div><div class="footer">June 2021 - powered by <a href="https://github.com/shagu/webls">webls</a></div></div>
+    </div>
+  </div>
+</body>
+
+</html>
